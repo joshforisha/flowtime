@@ -33,8 +33,7 @@ self.addEventListener('fetch', event => {
             cache.put(event.request, res.clone())
             return res
           })
-        }
-        return res
+        } else return res
       })
     )
   )
