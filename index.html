@@ -2,12 +2,224 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; script-src 'unsafe-inline' 'self'" />
     <meta name="description" content="A very simple interface for managing Flowtime tasks" />
+    <meta name="theme-color" content="#4C566A" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>Flowtime</title>
-    <link rel="icon" href="favicon.png" />
-    <link rel="stylesheet" href="main.css" />
-    <script src="main.js" type="module"></script>
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="icon" href="icon-32.png" />
+    <link rel="manifest" href="manifest.json" />
+    <style>
+      :root {
+        font-size: 20px;
+        line-height: 1.5;
+
+        /* Nord Colors */
+        --night: #2e3440;
+        --night1: #3b4252;
+        --night2: #434c5e;
+        --night3: #4c566a;
+        --snow: #d8dee9;
+        --snow1: #e5e9f0;
+        --snow2: #eceff4;
+        --frost1: #8fbcbb;
+        --frost: #88c0d0;
+        --frost2: #81a1c1;
+        --frost0: #5e81ac;
+        --red: #bf616a;
+        --orange: #d08770;
+        --yellow: #ebcb8b;
+        --green: #a3be8c;
+        --purple: #b48ead;
+
+        /* Fonts */
+        --mono-fonts: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+        --sans-serif-fonts: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--night);
+        color: var(--snow);
+        font-family: var(--sans-serif-fonts);
+        font-weight: 300;
+        margin: 0 auto;
+        max-width: 30rem;
+        padding: 2rem 1rem;
+      }
+
+      body.-break {
+        overflow: hidden;
+      }
+
+      button {
+        background-color: transparent;
+        border: 1.5px solid var(--night3);
+        border-radius: 0.25rem;
+        color: var(--snow);
+        cursor: pointer;
+        font-size: 1rem;
+        outline: none;
+        padding: 0.4rem 0.6rem;
+        text-align: left;
+        transition: all 100ms ease-out;
+        transition-property: background-color, border-color, color;
+      }
+
+      button:disabled {
+        border-color: var(--night1);
+        color: var(--night1);
+        cursor: not-allowed;
+      }
+
+      button:not(:disabled):hover {
+        border-color: var(--frost);
+        color: var(--frost);
+      }
+
+      button:not(.-inline) {
+        width: 100%;
+      }
+
+      button.-small {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: -0.25px;
+        text-transform: uppercase;
+      }
+
+      button.-current {
+        background-color: var(--yellow);
+        border-color: var(--yellow);
+        color: var(--night);
+      }
+
+      h1 {
+        font-size: 4rem;
+        line-height: 1;
+        margin: 0;
+        min-height: 4rem;
+      }
+
+      section {
+        margin: 1rem 0;
+        padding: 1rem 0;
+      }
+
+      span.time {
+        color: var(--night2);
+        font-family: var(--mono-fonts);
+        font-size: 0.85rem;
+        margin-right: 0.5rem;
+      }
+
+      ul {
+        font-weight: 400;
+        list-style-type: none;
+        margin: 0;
+        padding-left: 0;
+      }
+
+      #Break {
+        align-items: center;
+        background-color: var(--night);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        left: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        transition: opacity 500ms ease-out;
+        width: 100%;
+      }
+
+      #Break.-active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      #BreakProgress {
+        background-color: var(--snow);
+        height: 100%;
+        width: 0;
+      }
+
+      #BreakProgressBar {
+        border: 2px solid var(--snow);
+        border-radius: 0.5rem;
+        height: 1rem;
+        margin-top: 1rem;
+        overflow: hidden;
+        width: 20rem;
+      }
+
+      #ClearDone:not(:disabled):hover,
+      #Reset:not(:disabled):hover {
+        border-color: var(--red);
+        color: var(--red);
+      }
+
+      #CompletedTasks {
+        color: var(--night3);
+        display: flex;
+        flex-direction: column-reverse;
+      }
+
+      #Controls {
+        background-color: #0001;
+        border-radius: 0.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0.4rem;
+      }
+
+      #Controls button {
+        text-align: center;
+        width: 100%;
+      }
+
+      #Controls > div:not(:first-of-type) button {
+        margin-top: 1rem;
+      }
+
+      #Todo button {
+        margin-top: 0.5rem;
+      }
+
+      #Todo button:not(.-current):not(:disabled):hover {
+        border-color: var(--yellow);
+        color: var(--yellow);
+      }
+
+      #Todo button.-current:hover {
+        background-color: var(--green);
+        border-color: var(--green);
+        color: var(--night);
+      }
+
+      @media screen and (min-width: 768px) {
+        #Controls {
+          flex-direction: row;
+        }
+
+        #Controls button {
+          width: auto;
+        }
+
+        #Controls > div:last-of-type button {
+          margin-top: 0;
+        }
+      }
+    </style>
   </head>
   <body>
     <section id="Controls">
@@ -32,6 +244,195 @@
     <audio id="Chime">
       <source src="chime.wav" type="audio/wav" />
     </audio>
+    <script>
+      const addTaskButton = document.getElementById('AddTask')
+      const breakContainer = document.getElementById('Break')
+      const breakProgress = document.getElementById('BreakProgress')
+      const breakTimeLabel = document.getElementById('BreakTime')
+      const chimeAudio = document.getElementById('Chime')
+      const clearDoneButton = document.getElementById('ClearDone')
+      const completedList = document.getElementById('CompletedTasks')
+      const resetButton = document.getElementById('Reset')
+      const todoContainer = document.getElementById('Todo')
+
+      const emptyState = {
+        completedTasks: [],
+        currentTaskId: null,
+        startDate: null,
+        todoTasks: []
+      }
+
+      let state = JSON.parse(window.localStorage.getItem('state')) || emptyState
+
+      // Functions -----------------------------------------------------------------------------
+
+      function addTask () {
+        const name = window.prompt('Enter new task')
+        if (!name) return
+        const task = { id: Date.now().toString(), name }
+        appendTodo(task)
+        update({ todoTasks: state.todoTasks.concat(task) })
+      }
+
+      function appendCompleted ({ minutes, name }) {
+        const taskItem = document.createElement('li')
+        const timeSpan = document.createElement('span')
+        timeSpan.classList.add('time')
+        timeSpan.textContent = `${minutes}m`
+        taskItem.appendChild(timeSpan)
+        taskItem.appendChild(document.createTextNode(name))
+        completedList.append(taskItem)
+        if (clearDoneButton.hasAttribute('disabled')) {
+          clearDoneButton.removeAttribute('disabled')
+        }
+        if (resetButton.hasAttribute('disabled')) resetButton.removeAttribute('disabled')
+      }
+
+      function appendTodo ({ id, name }) {
+        const taskButton = document.createElement('button')
+        taskButton.setAttribute('data-id', id)
+        taskButton.textContent = name
+        if (state.currentTaskId !== null) {
+          if (state.currentTaskId === id) {
+            taskButton.classList.add('-current')
+            setInProgressTitle(id)
+          } else taskButton.setAttribute('disabled', '')
+        }
+        taskButton.addEventListener('click', () => {
+          if (taskButton.classList.contains('-current')) completeTask()
+          else startTask(id)
+        })
+        Array.from(todoContainer.children).concat(taskButton).sort(byTextContent)
+          .forEach(button => todoContainer.appendChild(button))
+        if (resetButton.hasAttribute('disabled')) resetButton.removeAttribute('disabled')
+      }
+
+      function breakMinutes (minutesSpent) {
+        if (minutesSpent <= 4) return 1
+        if (minutesSpent <= 25) return 5
+        if (minutesSpent <= 50) return 8
+        if (minutesSpent <= 90) return 10
+        return 15
+      }
+
+      function byTextContent (a, b) {
+        return a.textContent.toLowerCase() < b.textContent.toLowerCase() ? -1 : 1
+      }
+
+      function clearTitle () {
+        document.title = 'Flowtime'
+      }
+
+      function completeTask () {
+        const task = state.todoTasks.find(t => t.id === state.currentTaskId)
+        if (!task) throw new Error(`Couldn’t find matching task ID: ${state.currentTaskId}`)
+        const completedTask = {
+          minutes: Math.ceil((Date.now() - state.startDate) / 60000),
+          name: task.name
+        }
+        startBreak(completedTask.minutes)
+          .then(() => {
+            for (let i = todoContainer.children.length - 1; i >= 0; i--) {
+              const button = todoContainer.children[i]
+              if (button.classList.contains('-current')) todoContainer.removeChild(button)
+              else button.removeAttribute('disabled')
+            }
+            appendCompleted(completedTask)
+            update({
+              completedTasks: state.completedTasks.concat(completedTask),
+              currentTaskId: null,
+              startDate: null,
+              todoTasks: state.todoTasks.filter(t => t.id !== state.currentTaskId)
+            })
+          })
+      }
+
+      function setInProgressTitle (taskId) {
+        const task = state.todoTasks.find(t => t.id === taskId)
+        if (task) document.title = `▶️ ${task.name}`
+      }
+
+      function startBreak (minutesSpent) {
+        return new Promise(resolve => {
+          const breakMs = breakMinutes(minutesSpent) * 60000
+          const start = Date.now()
+          let remainingSeconds = Math.ceil(breakMs / 1000)
+          document.title = `💤 (${remainingSeconds})`
+          breakTimeLabel.textContent = Math.ceil(breakMs / 1000)
+          breakProgress.style.width = '0%'
+          breakContainer.classList.add('-active')
+          document.body.classList.add('-break')
+          setTimeout(() => {
+            resolve()
+            const countdown = setInterval(() => {
+              const elapsedMs = Date.now() - start
+              remainingSeconds = Math.ceil((breakMs - elapsedMs) / 1000)
+              document.title = `💤 (${remainingSeconds})`
+              breakTimeLabel.textContent = remainingSeconds
+              breakProgress.style.width = `${100 * elapsedMs / breakMs}%`
+              if (elapsedMs >= (breakMs - 500)) {
+                breakContainer.classList.remove('-active')
+                document.body.classList.remove('-break')
+              }
+              if (elapsedMs >= breakMs) {
+                chimeAudio.play()
+                clearTitle()
+                clearInterval(countdown)
+              }
+            }, 250)
+          }, 500)
+        })
+      }
+
+      function startTask (taskId) {
+        for (const button of todoContainer.children) {
+          if (button.getAttribute('data-id') === taskId) button.classList.add('-current')
+          else button.setAttribute('disabled', '')
+        }
+        setInProgressTitle(taskId)
+        update({
+          currentTaskId: taskId,
+          startDate: Date.now()
+        })
+      }
+
+      function update (changes) {
+        state = { ...state, ...changes }
+        window.localStorage.setItem('state', JSON.stringify(state))
+      }
+
+      // Initialization ------------------------------------------------------------------------
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+      }
+
+      addTaskButton.addEventListener('click', addTask)
+
+      clearDoneButton.addEventListener('click', () => {
+        completedList.innerHTML = ''
+        clearDoneButton.setAttribute('disabled', '')
+        if (state.todoTasks.length < 1) resetButton.setAttribute('disabled', '')
+        update({ completedTasks: [] })
+      })
+
+      resetButton.addEventListener('click', () => {
+        if (!window.confirm('Are you sure?')) return
+        todoContainer.innerHTML = ''
+        completedList.innerHTML = ''
+        clearTitle()
+        clearDoneButton.setAttribute('disabled', '')
+        resetButton.setAttribute('disabled', '')
+        update(emptyState)
+      })
+
+      state.todoTasks.forEach(appendTodo)
+      state.completedTasks.forEach(appendCompleted)
+
+      window.addEventListener('keydown', event => {
+        if (event.key === 'a') addTask()
+      })
+    </script>
   </body>
 </html>
 

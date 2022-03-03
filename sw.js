@@ -1,4 +1,4 @@
-const version = '1'
+const version = '2'
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -6,10 +6,13 @@ self.addEventListener('install', event => {
       cache.addAll([
         './',
         './chime.wav',
-        './favicon.png',
+        './icon-192.png',
+        './icon-32.png',
+        './icon-512.png',
         './index.html',
         './main.css',
-        './main.js'
+        './main.js',
+        './manifest.json'
       ])
     )
   )

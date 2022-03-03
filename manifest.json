@@ -1,0 +1,26 @@
+{
+  "background_color": "#2E3440",
+  "display": "standalone",
+  "name": "Flowtime",
+  "short_name": "Flowtime",
+  "start_url": "./",
+  "theme_color": "#4C566A",
+  "icons": [
+    {
+      "src": "./icon-32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "./icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
