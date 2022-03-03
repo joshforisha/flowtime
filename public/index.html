@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <title>Flowtime</title>
+    <link rel="icon" href="favicon.png" />
+    <link rel="stylesheet" href="main.css" />
+    <script src="main.js" type="module"></script>
+  </head>
+  <body>
+    <section id="Controls">
+      <div>
+        <button class="-inline -small" id="AddTask">Add Task</button>
+      </div>
+      <div>
+        <button class="-inline -small" disabled id="ClearDone">Clear Done</button>
+        <button class="-inline -small" disabled id="Reset">Reset</button>
+      </div>
+    </section>
+    <section id="Todo"></section>
+    <section>
+      <ul id="CompletedTasks"></ul>
+    </section>
+    <div id="Break">
+      <h1 id="BreakTime"></h1>
+      <div id="BreakProgressBar">
+        <div id="BreakProgress"></div>
+      </div>
+    </div>
+    <audio id="Chime">
+      <source src="chime.wav" type="audio/wav" />
+    </audio>
+  </body>
+</html>
+

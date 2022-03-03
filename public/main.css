@@ -1,0 +1,208 @@
+:root {
+  font-size: 20px;
+  line-height: 1.5;
+
+  /* Nord Colors */
+  --night: #2e3440;
+  --night1: #3b4252;
+  --night2: #434c5e;
+  --night3: #4c566a;
+  --snow: #d8dee9;
+  --snow1: #e5e9f0;
+  --snow2: #eceff4;
+  --frost1: #8fbcbb;
+  --frost: #88c0d0;
+  --frost2: #81a1c1;
+  --frost0: #5e81ac;
+  --red: #bf616a;
+  --orange: #d08770;
+  --yellow: #ebcb8b;
+  --green: #a3be8c;
+  --purple: #b48ead;
+
+  /* Fonts */
+  --mono-fonts: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+  --sans-serif-fonts: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--night);
+  color: var(--snow);
+  font-family: var(--sans-serif-fonts);
+  font-weight: 300;
+  margin: 0 auto;
+  max-width: 30rem;
+  padding: 2rem 1rem;
+}
+
+body.-break {
+  overflow: hidden;
+}
+
+button {
+  background-color: transparent;
+  border: 1.5px solid var(--night3);
+  border-radius: 0.25rem;
+  color: var(--snow);
+  cursor: pointer;
+  font-size: 1rem;
+  outline: none;
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  transition: all 100ms ease-out;
+  transition-property: background-color, border-color, color;
+}
+
+button:disabled {
+  border-color: var(--night1);
+  color: var(--night1);
+  cursor: not-allowed;
+}
+
+button:not(:disabled):hover {
+  border-color: var(--frost);
+  color: var(--frost);
+}
+
+button:not(.-inline) {
+  width: 100%;
+}
+
+button.-small {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.25px;
+  text-transform: uppercase;
+}
+
+button.-current {
+  background-color: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--night);
+}
+
+h1 {
+  font-size: 4rem;
+  line-height: 1;
+  margin: 0;
+  min-height: 4rem;
+}
+
+section {
+  margin: 1rem 0;
+  padding: 1rem 0;
+}
+
+span.time {
+  color: var(--night2);
+  font-family: var(--mono-fonts);
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+ul {
+  font-weight: 400;
+  list-style-type: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+#Break {
+  align-items: center;
+  background-color: var(--night);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: opacity 500ms ease-out;
+  width: 100%;
+}
+
+#Break.-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#BreakProgress {
+  background-color: var(--snow);
+  height: 100%;
+  width: 0;
+}
+
+#BreakProgressBar {
+  border: 2px solid var(--snow);
+  border-radius: 0.5rem;
+  height: 1rem;
+  margin-top: 1rem;
+  overflow: hidden;
+  width: 20rem;
+}
+
+#ClearDone:not(:disabled):hover,
+#Reset:not(:disabled):hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+#CompletedTasks {
+  color: var(--night3);
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+#Controls {
+  background-color: #0001;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.4rem;
+}
+
+#Controls button {
+  text-align: center;
+  width: 100%;
+}
+
+#Controls > div:not(:first-of-type) button {
+  margin-top: 1rem;
+}
+
+#Todo button {
+  margin-top: 0.5rem;
+}
+
+#Todo button:not(.-current):not(:disabled):hover {
+  border-color: var(--yellow);
+  color: var(--yellow);
+}
+
+#Todo button.-current:hover {
+  background-color: var(--green);
+  border-color: var(--green);
+  color: var(--night);
+}
+
+@media screen and (min-width: 768px) {
+  #Controls {
+    flex-direction: row;
+  }
+
+  #Controls button {
+    width: auto;
+  }
+
+  #Controls > div:last-of-type button {
+    margin-top: 0;
+  }
+}
