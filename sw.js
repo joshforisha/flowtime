@@ -1,4 +1,4 @@
-const version = '2'
+const version = '3'
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -10,8 +10,6 @@ self.addEventListener('install', event => {
         './icon-32.png',
         './icon-512.png',
         './index.html',
-        './main.css',
-        './main.js',
         './manifest.json'
       ])
     )
