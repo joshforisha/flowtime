@@ -16,22 +16,22 @@
         line-height: 1.5;
 
         /* Nord Colors */
-        --night: #2e3440;
-        --night1: #3b4252;
-        --night2: #434c5e;
-        --night3: #4c566a;
-        --snow: #d8dee9;
-        --snow1: #e5e9f0;
-        --snow2: #eceff4;
-        --frost1: #8fbcbb;
-        --frost: #88c0d0;
-        --frost2: #81a1c1;
-        --frost0: #5e81ac;
-        --red: #bf616a;
-        --orange: #d08770;
-        --yellow: #ebcb8b;
-        --green: #a3be8c;
-        --purple: #b48ead;
+        --nord0: #2e3440;
+        --nord1: #3b4252;
+        --nord2: #434c5e;
+        --nord3: #4c566a;
+        --nord4: #d8dee9;
+        --nord5: #e5e9f0;
+        --nord6: #eceff4;
+        --nord7: #8fbcbb;
+        --nord8: #88c0d0;
+        --nord9: #81a1c1;
+        --nordA: #5e81ac;
+        --nordB: #bf616a;
+        --nordC: #d08770;
+        --nordD: #ebcb8b;
+        --nordE: #a3be8c;
+        --nordF: #b48ead;
 
         /* Fonts */
         --mono-fonts: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
@@ -43,13 +43,13 @@
       }
 
       body {
-        background-color: var(--night);
-        color: var(--snow);
+        background-color: var(--nord0);
+        color: var(--nord4);
         font-family: var(--sans-serif-fonts);
         font-weight: 300;
         margin: 0 auto;
-        max-width: 30rem;
-        padding: 2rem 1rem;
+        max-width: 560px;
+        padding: 10px;
       }
 
       body.-break {
@@ -57,28 +57,23 @@
       }
 
       button {
-        background-color: transparent;
-        border: 1.5px solid var(--night3);
-        border-radius: 0.25rem;
-        color: var(--snow);
+        background-color: var(--nord4);
+        border-width: 0;
+        border-radius: 5px;
+        color: #111c;
         cursor: pointer;
         font-size: 1rem;
+        height: 44px;
         outline: none;
-        padding: 0.4rem 0.6rem;
+        padding: 5px 10px;
         text-align: left;
         transition: all 100ms ease-out;
         transition-property: background-color, border-color, color;
       }
 
       button:disabled {
-        border-color: var(--night1);
-        color: var(--night1);
         cursor: not-allowed;
-      }
-
-      button:not(:disabled):hover {
-        border-color: var(--frost);
-        color: var(--frost);
+        opacity: 0.25;
       }
 
       button:not(.-inline) {
@@ -93,9 +88,9 @@
       }
 
       button.-current {
-        background-color: var(--yellow);
-        border-color: var(--yellow);
-        color: var(--night);
+        background-color: var(--nordD);
+        border-color: var(--nordD);
+        color: var(--nord0);
       }
 
       h1 {
@@ -106,15 +101,23 @@
       }
 
       section {
-        margin: 1rem 0;
-        padding: 1rem 0;
+        margin: 10px 0;
+        padding: 10px 0;
       }
 
       span.time {
-        color: var(--night2);
+        color: var(--nord8);
         font-family: var(--mono-fonts);
-        font-size: 0.85rem;
-        margin-right: 0.5rem;
+        font-size: 0.8em;
+        margin-right: 5px;
+      }
+
+      span.time::before {
+        content: "(";
+      }
+
+      span.time::after {
+        content: ")";
       }
 
       ul {
@@ -124,9 +127,13 @@
         padding-left: 0;
       }
 
+      #AddTask {
+        background-color: var(--nordE);
+      }
+
       #Break {
         align-items: center;
-        background-color: var(--night);
+        background-color: var(--nord0);
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -147,39 +154,47 @@
       }
 
       #BreakProgress {
-        background-color: var(--snow);
+        background-color: var(--nord4);
         height: 100%;
         width: 0;
       }
 
       #BreakProgressBar {
-        border: 2px solid var(--snow);
-        border-radius: 0.5rem;
-        height: 1rem;
-        margin-top: 1rem;
+        border: 2px solid var(--nord4);
+        border-radius: 5px;
+        height: 10px;
+        margin-top: 10px;
+        max-width: 20rem;
         overflow: hidden;
-        width: 20rem;
+        width: 90vw;
       }
 
-      #ClearDone:not(:disabled):hover,
-      #Reset:not(:disabled):hover {
-        border-color: var(--red);
-        color: var(--red);
+      #ClearDone,
+      #Reset {
+        background-color: var(--nordB);
+        color: #fffc;
+      }
+
+      #ClearDone:disabled,
+      #Reset:disabled {
+        background-color: var(--nordB);
+        color: #fff6;
       }
 
       #CompletedTasks {
-        color: var(--night3);
+        color: var(--nord6);
         display: flex;
         flex-direction: column-reverse;
+        opacity: 0.5;
       }
 
       #Controls {
-        background-color: #0001;
-        border-radius: 0.25rem;
+        background-color: #0002;
+        border-radius: 5px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 0.4rem;
+        padding: 10px;
       }
 
       #Controls button {
@@ -188,22 +203,21 @@
       }
 
       #Controls > div:not(:first-of-type) button {
-        margin-top: 1rem;
+        margin-top: 10px;
       }
 
       #Todo button {
-        margin-top: 0.5rem;
+        margin-top: 10px;
       }
 
-      #Todo button:not(.-current):not(:disabled):hover {
-        border-color: var(--yellow);
-        color: var(--yellow);
-      }
+      @media screen and (hover: hover) {
+        #Todo button:not(.-current):not(:disabled):hover {
+          background-color: var(--nordD);
+        }
 
-      #Todo button.-current:hover {
-        background-color: var(--green);
-        border-color: var(--green);
-        color: var(--night);
+        #Todo button.-current:hover {
+          background-color: var(--nordE);
+        }
       }
 
       @media screen and (min-width: 768px) {
@@ -435,4 +449,3 @@
     </script>
   </body>
 </html>
-
