@@ -1,4 +1,4 @@
-const version = '3'
+const version = '2022.3.6'
 
 self.addEventListener('install', event => {
   event.waitUntil(
