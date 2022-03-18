@@ -1,16 +1,22 @@
-const version = '2022.3.6'
+const version = '2022.3.18'
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(version).then(cache =>
       cache.addAll([
         './',
+        './apple-touch-icon.png',
+        './browserconfig.xml',
         './chime.wav',
+        './favicon.ico',
+        './icon-16.png',
         './icon-192.png',
         './icon-32.png',
         './icon-512.png',
         './index.html',
-        './manifest.json'
+        './manifest.json',
+        './mstile.png',
+        './safari-pinned-tab.svg'
       ])
     )
   )

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(2.66667,0,0,2.66667,0,0)">
+        <path d="M192,48C192,21.508 170.492,0 144,0L48,0C21.508,0 0,21.508 0,48L0,144C0,170.492 21.508,192 48,192L144,192C170.492,192 192,170.492 192,144L192,48Z"/>
+    </g>
+    <g transform="matrix(2.66667,0,0,2.66667,578.667,544)">
+        <g transform="matrix(0.5,-0.866025,0.866025,0.5,-252.086,-72.9219)">
+            <rect x="96" y="84" width="83.138" height="24" style="fill:white;"/>
+        </g>
+        <g transform="matrix(1,0,0,1,-217,-204)">
+            <rect x="96" y="84" width="83.138" height="24" style="fill:white;"/>
+        </g>
+        <g transform="matrix(0.5,0.866025,-0.866025,0.5,-85.8093,-239.081)">
+            <rect x="96" y="84" width="83.138" height="24" style="fill:white;"/>
+        </g>
+        <g transform="matrix(0.5,-0.866025,0.866025,0.5,-293.663,-0.887652)">
+            <rect x="96" y="84" width="83.138" height="24" style="fill:white;"/>
+        </g>
+        <g transform="matrix(1,0,0,1,-300.138,-204)">
+            <rect x="96" y="84" width="83.138" height="24" style="fill:white;"/>
+        </g>
+        <g transform="matrix(0.5,0.866025,-0.866025,0.5,-127.386,-311.196)">
+            <rect x="96" y="84" width="83.138" height="24" style="fill:white;"/>
+        </g>
+        <g transform="matrix(0.866025,-0.5,0.5,0.866025,-252.138,-143.138)">
+            <path d="M127.077,17.942L148.061,30.058L116.984,83.885L179.138,83.885L179.138,108.115L116.984,108.115L148.061,161.942L127.077,174.058L96,120.23L64.923,174.058L43.939,161.942L75.016,108.115L12.862,108.115L12.862,83.885L75.016,83.885L43.939,30.058L64.923,17.942L96,71.77L127.077,17.942Z" style="fill:white;"/>
+        </g>
+    </g>
+</svg>
