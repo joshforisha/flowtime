@@ -54,17 +54,20 @@
       }
 
       button {
+        align-items: center;
         background-color: var(--nord4);
         border-radius: 2px;
         border-width: 0;
         color: var(--nord0);
         cursor: pointer;
+        display: inline-flex;
         flex-shrink: 0;
         font-family: inherit;
         font-size: 1em;
-        padding: 0 20px;
+        justify-content: center;
         min-height: 44px;
         min-width: 44px;
+        padding: 0 20px;
       }
 
       button:disabled {
@@ -86,10 +89,7 @@
       }
 
       button.-icon {
-        align-items: center;
-        display: flex;
         font-size: 1.5rem;
-        justify-content: center;
         line-height: 1;
         padding: 0;
       }
@@ -105,7 +105,7 @@
       h2 {
         align-items: center;
         display: flex;
-        font-weight: 400;
+        font-weight: 300;
         margin: 0 0 20px;
       }
 
@@ -211,10 +211,6 @@
       }
 
       #CurrentTask {
-        align-items: baseline;
-        display: flex;
-        font-size: 2rem;
-        min-height: 3rem;
         opacity: 0;
         pointer-events: none;
         transition: opacity 200ms ease-out;
@@ -223,6 +219,18 @@
       #CurrentTask.-busy {
         opacity: 1;
         pointer-events: auto;
+      }
+
+      #CurrentTask button {
+        margin-right: 10px;
+      }
+
+      #CurrentTask .name {
+        display: block;
+        font-size: 2rem;
+        line-height: 1;
+        margin-bottom: 20px;
+        min-height: 2rem;
       }
 
       #Interrupted {
@@ -276,11 +284,14 @@
   <body>
     <div id="CurrentTask">
       <span class="name"></span>
-      <span class="timer"></span>
-    </div>
-    <div id="Controls">
-      <button class="-good" disabled id="FinishTask">Finish</button>
-      <button class="-caution" disabled id="Interrupted">Interrupted <span class="count">—</span></button>
+      <button class="-good" disabled id="FinishTask">
+        Finish
+        <span class="timer"></span>
+      </button>
+      <button class="-caution" disabled id="Interrupted">
+        Interrupted
+        <span class="count">—</span>
+      </button>
     </div>
     <section id="TodoTasks">
       <h2>
@@ -529,6 +540,9 @@
           clearInterval(currentTimerInterval)
           currentTimerInterval = null
         }
+        setTimeout(() => {
+          currentTaskName.textContent = ''
+        }, 200)
         startBreak(Math.ceil((task.finished - task.started) / 60000))
         updateState({
           completedTasks: state.completedTasks.concat(task),
