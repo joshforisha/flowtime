@@ -37,7 +37,6 @@
         --nordF: #b48ead;
 
         /* Fonts */
-        --mono-fonts: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
         --sans-serif-fonts: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
       }
 
@@ -51,27 +50,21 @@
         font-family: var(--sans-serif-fonts);
         font-weight: 300;
         margin: 0 auto;
-        max-width: 560px;
-        padding: 10px;
-      }
-
-      body.-break {
-        overflow: hidden;
+        padding: 20px;
       }
 
       button {
         background-color: var(--nord4);
+        border-radius: 2px;
         border-width: 0;
-        border-radius: 5px;
-        color: #111c;
+        color: var(--nord0);
         cursor: pointer;
-        font-size: 1rem;
-        height: 44px;
-        outline: none;
-        padding: 5px 10px;
-        text-align: left;
-        transition: all 100ms ease-out;
-        transition-property: background-color, border-color, color;
+        flex-shrink: 0;
+        font-family: inherit;
+        font-size: 1em;
+        padding: 0 20px;
+        min-height: 44px;
+        min-width: 44px;
       }
 
       button:disabled {
@@ -79,59 +72,94 @@
         opacity: 0.25;
       }
 
-      button:not(.-inline) {
-        width: 100%;
+      button.-caution {
+        background-color: var(--nordD);
+      }
+
+      button.-danger {
+        background-color: var(--nordB);
+        color: var(--nord6);
+      }
+
+      button.-good {
+        background-color: var(--nordE);
+      }
+
+      button.-icon {
+        align-items: center;
+        display: flex;
+        font-size: 1.5rem;
+        justify-content: center;
+        line-height: 1;
+        padding: 0;
       }
 
       button.-small {
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: -0.25px;
-        text-transform: uppercase;
-      }
-
-      button.-current {
-        background-color: var(--nordD);
-        border-color: var(--nordD);
-        color: var(--nord0);
+        font-size: 0.67em;
       }
 
       h1 {
-        font-size: 4rem;
-        line-height: 1;
         margin: 0;
-        min-height: 4rem;
+      }
+
+      h2 {
+        align-items: center;
+        display: flex;
+        margin: 0 0 20px;
+      }
+
+      h2 > span:first-child {
+        flex-grow: 1;
+      }
+
+      h2 > *:not(:last-child) {
+        margin-right: 10px;
+      }
+
+      input {
+        background-color: transparent;
+        border-color: transparent;
+        border-radius: 5px;
+        border-style: solid;
+        color: inherit;
+        font: inherit;
+        padding: 0 5px;
+        width: 100%;
+      }
+
+      input:focus-visible {
+        outline-color: var(--nord8);
+        outline-style: solid;
       }
 
       section {
-        margin: 10px 0;
-        padding: 10px 0;
-      }
-
-      span.time {
-        color: var(--nord8);
-        font-family: var(--mono-fonts);
-        font-size: 0.8em;
-        margin-right: 5px;
-      }
-
-      span.time::before {
-        content: "(";
-      }
-
-      span.time::after {
-        content: ")";
+        background-color: var(--nord1);
+        border-radius: 5px;
+        display: block;
+        margin-top: 40px;
+        padding: 10px;
       }
 
       ul {
-        font-weight: 400;
-        list-style-type: none;
+        background-color: var(--nord1);
         margin: 0;
-        padding-left: 0;
+        padding-left: 30px;
       }
 
-      #AddTask {
-        background-color: var(--nordE);
+      .timer {
+        font-size: 0.8em;
+        margin-left: 10px;
+        opacity: 0.5;
+      }
+
+      .timer::after {
+        content: ")";
+        opacity: 0.5;
+      }
+
+      .timer::before {
+        content: "(";
+        opacity: 0.5;
       }
 
       #Break {
@@ -139,15 +167,14 @@
         background-color: var(--nord0);
         display: flex;
         flex-direction: column;
-        height: 100%;
+        height: 8rem;
         justify-content: center;
         left: 0;
         opacity: 0;
-        overflow: hidden;
         pointer-events: none;
         position: fixed;
         top: 0;
-        transition: opacity 500ms ease-out;
+        transition: opacity 250ms ease-out;
         width: 100%;
       }
 
@@ -172,85 +199,103 @@
         width: 90vw;
       }
 
-      #ClearDone,
-      #Reset {
-        background-color: var(--nordB);
-        color: #fffc;
-      }
-
-      #ClearDone:disabled,
-      #Reset:disabled {
-        background-color: var(--nordB);
-        color: #fff6;
-      }
-
-      #CompletedTasks {
-        color: var(--nord6);
-        display: flex;
-        flex-direction: column-reverse;
-        opacity: 0.5;
-      }
-
       #Controls {
-        background-color: #0002;
-        border-radius: 5px;
+        align-items: center;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 10px;
+        margin-top: 20px;
       }
 
       #Controls button {
-        text-align: center;
-        width: 100%;
+        margin-right: 20px;
       }
 
-      #Controls > div:not(:first-of-type) button {
-        margin-top: 10px;
+      #CurrentTask {
+        align-items: baseline;
+        display: flex;
+        font-size: 2rem;
+        min-height: 3rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease-out;
       }
 
-      #Todo button {
-        margin-top: 10px;
+      #CurrentTask.-busy {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      #Interrupted {
+        width: 9rem;
+      }
+
+      #Interrupted .count {
+        font-size: 0.85em;
+        margin-left: 10px;
+        opacity: 0.5;
+      }
+
+      #TodoTasks li {
+        border-top: 1px solid var(--nord2);
+        display: flex;
+        margin-top: 5px;
+        padding-top: 5px;
+      }
+
+      #TodoTasks li input {
+        margin: 0 5px;
+      }
+
+      #TodoTasks ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      @media screen and (min-width: 1024px) {
+        :root {
+          font-size: 24px;
+        }
+
+        section {
+          margin-top: 80px;
+        }
       }
 
       @media screen and (hover: hover) {
-        #Todo button:not(.-current):not(:disabled):hover {
-          background-color: var(--nordD);
+        button {
+          opacity: 0.9;
+          transition: opacity 100ms ease-out;
         }
 
-        #Todo button.-current:hover {
-          background-color: var(--nordE);
-        }
-      }
-
-      @media screen and (min-width: 768px) {
-        #Controls {
-          flex-direction: row;
-        }
-
-        #Controls button {
-          width: auto;
-        }
-
-        #Controls > div:last-of-type button {
-          margin-top: 0;
+        button:not(:disabled):hover {
+          opacity: 1;
         }
       }
     </style>
+    <script src="main.js" type="module"></script>
   </head>
   <body>
-    <section id="Controls">
-      <div>
-        <button class="-inline -small" id="AddTask">Add Task</button>
-      </div>
-      <div>
-        <button class="-inline -small" disabled id="ClearDone">Clear Done</button>
-        <button class="-inline -small" disabled id="Reset">Reset</button>
-      </div>
+    <div id="CurrentTask">
+      <span class="name"></span>
+      <span class="timer"></span>
+    </div>
+    <div id="Controls">
+      <button class="-good" disabled id="FinishTask">Finish</button>
+      <button class="-caution" disabled id="Interrupted">Interrupted <span class="count">—</span></button>
+    </div>
+    <section id="TodoTasks">
+      <h2>
+        <span>Todo</span>
+        <button class="-small -good" id="AddTodo">Add Todo</button>
+        <button class="-small -danger" disabled id="ClearTodos">Clear</button>
+      </h2>
+      <ul></ul>
     </section>
-    <section id="Todo"></section>
-    <section>
-      <ul id="CompletedTasks"></ul>
+    <section id="CompletedTasks">
+      <h2>
+        <span>Completed</span>
+        <button class="-small -danger" disabled id="ClearCompleted">Clear</button>
+      </h2>
+      <ul></ul>
     </section>
     <div id="Break">
       <h1 id="BreakTime"></h1>
@@ -261,190 +306,5 @@
     <audio id="Chime">
       <source src="chime.wav" type="audio/wav" />
     </audio>
-    <script>
-      const addTaskButton = document.getElementById('AddTask')
-      const breakContainer = document.getElementById('Break')
-      const breakProgress = document.getElementById('BreakProgress')
-      const breakTimeLabel = document.getElementById('BreakTime')
-      const chimeAudio = document.getElementById('Chime')
-      const clearDoneButton = document.getElementById('ClearDone')
-      const completedList = document.getElementById('CompletedTasks')
-      const resetButton = document.getElementById('Reset')
-      const todoContainer = document.getElementById('Todo')
-
-      const emptyState = {
-        completedTasks: [],
-        currentTaskId: null,
-        startDate: null,
-        todoTasks: []
-      }
-
-      let state = JSON.parse(window.localStorage.getItem('state')) || emptyState
-
-      function addTask () {
-        const name = window.prompt('Enter new task')
-        if (!name) return
-        const task = { id: Date.now().toString(), name }
-        appendTodo(task)
-        update({ todoTasks: state.todoTasks.concat(task) })
-      }
-
-      function appendCompleted ({ minutes, name }) {
-        const taskItem = document.createElement('li')
-        const timeSpan = document.createElement('span')
-        timeSpan.classList.add('time')
-        timeSpan.textContent = `${minutes}m`
-        taskItem.appendChild(timeSpan)
-        taskItem.appendChild(document.createTextNode(name))
-        completedList.append(taskItem)
-        if (clearDoneButton.hasAttribute('disabled')) {
-          clearDoneButton.removeAttribute('disabled')
-        }
-        if (resetButton.hasAttribute('disabled')) resetButton.removeAttribute('disabled')
-      }
-
-      function appendTodo ({ id, name }) {
-        const taskButton = document.createElement('button')
-        taskButton.setAttribute('data-id', id)
-        taskButton.textContent = name
-        if (state.currentTaskId !== null) {
-          if (state.currentTaskId === id) {
-            taskButton.classList.add('-current')
-            setInProgressTitle(id)
-          } else taskButton.setAttribute('disabled', '')
-        }
-        taskButton.addEventListener('click', () => {
-          if (taskButton.classList.contains('-current')) completeTask()
-          else startTask(id)
-        })
-        Array.from(todoContainer.children).concat(taskButton).sort(byTextContent)
-          .forEach(button => todoContainer.appendChild(button))
-        if (resetButton.hasAttribute('disabled')) resetButton.removeAttribute('disabled')
-      }
-
-      function breakMinutes (minutesSpent) {
-        if (minutesSpent <= 4) return 1
-        if (minutesSpent <= 25) return 5
-        if (minutesSpent <= 50) return 8
-        if (minutesSpent <= 90) return 10
-        return 15
-      }
-
-      function byTextContent (a, b) {
-        return a.textContent.toLowerCase() < b.textContent.toLowerCase() ? -1 : 1
-      }
-
-      function clearTitle () {
-        document.title = 'Flowtime'
-      }
-
-      function completeTask () {
-        const task = state.todoTasks.find(t => t.id === state.currentTaskId)
-        if (!task) throw new Error(`Couldn’t find matching task ID: ${state.currentTaskId}`)
-        const completedTask = {
-          minutes: Math.ceil((Date.now() - state.startDate) / 60000),
-          name: task.name
-        }
-        startBreak(completedTask.minutes)
-          .then(() => {
-            for (let i = todoContainer.children.length - 1; i >= 0; i--) {
-              const button = todoContainer.children[i]
-              if (button.classList.contains('-current')) todoContainer.removeChild(button)
-              else button.removeAttribute('disabled')
-            }
-            appendCompleted(completedTask)
-            update({
-              completedTasks: state.completedTasks.concat(completedTask),
-              currentTaskId: null,
-              startDate: null,
-              todoTasks: state.todoTasks.filter(t => t.id !== state.currentTaskId)
-            })
-          })
-      }
-
-      function setInProgressTitle (taskId) {
-        const task = state.todoTasks.find(t => t.id === taskId)
-        if (task) document.title = `▶️ ${task.name}`
-      }
-
-      function startBreak (minutesSpent) {
-        return new Promise(resolve => {
-          const breakMs = breakMinutes(minutesSpent) * 60000
-          const start = Date.now()
-          let remainingSeconds = Math.ceil(breakMs / 1000)
-          document.title = `💤 (${remainingSeconds})`
-          breakTimeLabel.textContent = Math.ceil(breakMs / 1000)
-          breakProgress.style.width = '0%'
-          breakContainer.classList.add('-active')
-          document.body.classList.add('-break')
-          setTimeout(() => {
-            resolve()
-            const countdown = setInterval(() => {
-              const elapsedMs = Date.now() - start
-              remainingSeconds = Math.ceil((breakMs - elapsedMs) / 1000)
-              document.title = `💤 (${remainingSeconds})`
-              breakTimeLabel.textContent = remainingSeconds
-              breakProgress.style.width = `${100 * elapsedMs / breakMs}%`
-              if (elapsedMs >= (breakMs - 500)) {
-                breakContainer.classList.remove('-active')
-                document.body.classList.remove('-break')
-              }
-              if (elapsedMs >= breakMs) {
-                chimeAudio.play()
-                clearTitle()
-                clearInterval(countdown)
-              }
-            }, 250)
-          }, 500)
-        })
-      }
-
-      function startTask (taskId) {
-        for (const button of todoContainer.children) {
-          if (button.getAttribute('data-id') === taskId) button.classList.add('-current')
-          else button.setAttribute('disabled', '')
-        }
-        setInProgressTitle(taskId)
-        update({
-          currentTaskId: taskId,
-          startDate: Date.now()
-        })
-      }
-
-      function update (changes) {
-        state = { ...state, ...changes }
-        window.localStorage.setItem('state', JSON.stringify(state))
-      }
-
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-      }
-
-      addTaskButton.addEventListener('click', addTask)
-
-      clearDoneButton.addEventListener('click', () => {
-        completedList.innerHTML = ''
-        clearDoneButton.setAttribute('disabled', '')
-        if (state.todoTasks.length < 1) resetButton.setAttribute('disabled', '')
-        update({ completedTasks: [] })
-      })
-
-      resetButton.addEventListener('click', () => {
-        if (!window.confirm('Are you sure?')) return
-        todoContainer.innerHTML = ''
-        completedList.innerHTML = ''
-        clearTitle()
-        clearDoneButton.setAttribute('disabled', '')
-        resetButton.setAttribute('disabled', '')
-        update(emptyState)
-      })
-
-      state.todoTasks.forEach(appendTodo)
-      state.completedTasks.forEach(appendCompleted)
-
-      window.addEventListener('keydown', event => {
-        if (event.key === 'a') addTask()
-      })
-    </script>
   </body>
 </html>
