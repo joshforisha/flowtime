@@ -113,19 +113,19 @@ function enable (button) {
 function populateCurrentTask (task) {
   currentTaskName.textContent = task.name
   const updateCount = () => {
-    const elapsed = Math.ceil((Date.now() - task.started) / 60_000)
+    const elapsed = Math.ceil((Date.now() - task.started) / 60000)
     currentTimer.textContent = `${Math.max(1, elapsed)} min`
   }
   updateCount()
-  const currentMs = Date.now() % 60_000
-  const taskOffset = task.started % 60_000
+  const currentMs = Date.now() % 60000
+  const taskOffset = task.started % 60000
   const delay = currentMs > taskOffset
-    ? 60_000 + taskOffset - currentMs
+    ? 60000 + taskOffset - currentMs
     : taskOffset - currentMs
   currentTimerTimeout = setTimeout(() => {
     updateCount()
     currentTimerTimeout = null
-    currentTimerInterval = setInterval(updateCount, 60_000)
+    currentTimerInterval = setInterval(updateCount, 60000)
   }, delay)
   interruptedCount.textContent = '0'
   currentTask.classList.add('-busy')
@@ -133,7 +133,7 @@ function populateCurrentTask (task) {
 
 function startBreak (minutesSpent) {
   breaking = true
-  const breakMs = breakMinutes(minutesSpent) * 60_000
+  const breakMs = breakMinutes(minutesSpent) * 60000
   const start = Date.now()
   let remainingSeconds = Math.ceil(breakMs / 1000)
   breakTime.textContent = remainingSeconds
