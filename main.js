@@ -113,7 +113,6 @@ function enable (button) {
 function populateCurrentTask (task) {
   currentTaskName.textContent = task.name
   const updateCount = () => {
-    console.log(Date.now() % 3_600_000, '!update')
     const elapsed = Math.ceil((Date.now() - task.started) / 60_000)
     currentTimer.textContent = `${Math.max(1, elapsed)} min`
   }
