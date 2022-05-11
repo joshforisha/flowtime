@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; script-src 'unsafe-inline' 'self'" />
+    <meta name="description" content="A very simple interface for managing Flowtime tasks" />
+    <meta name="msapplication-TileColor" content="#DA532C" />
+    <meta name="theme-color" content="#4C566A" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <title>Flowtime</title>
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="icon" href="./icon-16.png" sizes="16x16" />
+    <link rel="icon" href="./icon-32.png" sizes="32x32" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#4C566A" />
+    <style>
+      :root {
+        font-size: 20px;
+        line-height: 1.5;
+
+        /* Nord Colors */
+        --nord0: #2e3440;
+        --nord1: #3b4252;
+        --nord2: #434c5e;
+        --nord3: #4c566a;
+        --nord4: #d8dee9;
+        --nord5: #e5e9f0;
+        --nord6: #eceff4;
+        --nord7: #8fbcbb;
+        --nord8: #88c0d0;
+        --nord9: #81a1c1;
+        --nordA: #5e81ac;
+        --nordB: #bf616a;
+        --nordC: #d08770;
+        --nordD: #ebcb8b;
+        --nordE: #a3be8c;
+        --nordF: #b48ead;
+
+        /* Fonts */
+        --sans-serif-fonts: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--nord0);
+        color: var(--nord4);
+        font-family: var(--sans-serif-fonts);
+        font-weight: 300;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      button {
+        background-color: var(--nord4);
+        border-radius: 2px;
+        border-width: 0;
+        color: var(--nord0);
+        cursor: pointer;
+        flex-shrink: 0;
+        font-family: inherit;
+        font-size: 1em;
+        padding: 0 20px;
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.25;
+      }
+
+      button.-caution {
+        background-color: var(--nordD);
+      }
+
+      button.-danger {
+        background-color: var(--nordB);
+        color: var(--nord6);
+      }
+
+      button.-good {
+        background-color: var(--nordE);
+      }
+
+      button.-icon {
+        align-items: center;
+        display: flex;
+        font-size: 1.5rem;
+        justify-content: center;
+        line-height: 1;
+        padding: 0;
+      }
+
+      button.-small {
+        font-size: 0.67em;
+      }
+
+      h1 {
+        margin: 0;
+      }
+
+      h2 {
+        align-items: center;
+        display: flex;
+        font-weight: 400;
+        margin: 0 0 20px;
+      }
+
+      h2 > span:first-child {
+        flex-grow: 1;
+      }
+
+      h2 > *:not(:last-child) {
+        margin-right: 10px;
+      }
+
+      input {
+        background-color: transparent;
+        border-color: transparent;
+        border-radius: 5px;
+        border-style: solid;
+        color: inherit;
+        font: inherit;
+        padding: 0 5px;
+        width: 100%;
+      }
+
+      input:focus-visible {
+        outline-color: var(--nord8);
+        outline-style: solid;
+      }
+
+      section {
+        background-color: var(--nord1);
+        border-radius: 5px;
+        display: block;
+        margin-top: 40px;
+        padding: 10px;
+      }
+
+      ul {
+        background-color: var(--nord1);
+        margin: 0;
+        padding-left: 30px;
+      }
+
+      .timer {
+        font-size: 0.8em;
+        margin-left: 10px;
+        opacity: 0.5;
+      }
+
+      .timer::after {
+        content: ")";
+        opacity: 0.5;
+      }
+
+      .timer::before {
+        content: "(";
+        opacity: 0.5;
+      }
+
+      #Break {
+        align-items: center;
+        background-color: var(--nord0);
+        display: flex;
+        flex-direction: column;
+        height: 8rem;
+        justify-content: center;
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        transition: opacity 250ms ease-out;
+        width: 100%;
+      }
+
+      #Break.-active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      #BreakProgress {
+        background-color: var(--nord4);
+        height: 100%;
+        width: 0;
+      }
+
+      #BreakProgressBar {
+        border: 2px solid var(--nord4);
+        border-radius: 5px;
+        height: 10px;
+        margin-top: 10px;
+        max-width: 20rem;
+        overflow: hidden;
+        width: 90vw;
+      }
+
+      #Controls {
+        align-items: center;
+        display: flex;
+        margin-top: 20px;
+      }
+
+      #Controls button {
+        margin-right: 20px;
+      }
+
+      #CurrentTask {
+        align-items: baseline;
+        display: flex;
+        font-size: 2rem;
+        min-height: 3rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease-out;
+      }
+
+      #CurrentTask.-busy {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      #Interrupted {
+        width: 9rem;
+      }
+
+      #Interrupted .count {
+        font-size: 0.85em;
+        margin-left: 10px;
+        opacity: 0.5;
+      }
+
+      #TodoTasks li {
+        border-top: 1px solid var(--nord2);
+        display: flex;
+        margin-top: 5px;
+        padding-top: 5px;
+      }
+
+      #TodoTasks li input {
+        margin: 0 5px;
+      }
+
+      #TodoTasks ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      @media screen and (min-width: 1024px) {
+        :root {
+          font-size: 24px;
+        }
+
+        section {
+          margin-top: 80px;
+        }
+      }
+
+      @media screen and (hover: hover) {
+        button {
+          opacity: 0.9;
+          transition: opacity 100ms ease-out;
+        }
+
+        button:not(:disabled):hover {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="CurrentTask">
+      <span class="name"></span>
+      <span class="timer"></span>
+    </div>
+    <div id="Controls">
+      <button class="-good" disabled id="FinishTask">Finish</button>
+      <button class="-caution" disabled id="Interrupted">Interrupted <span class="count">—</span></button>
+    </div>
+    <section id="TodoTasks">
+      <h2>
+        <span>Todo</span>
+        <button class="-small -good" id="AddTodo">Add Todo</button>
+        <button class="-small -danger" disabled id="ClearTodos">Clear</button>
+      </h2>
+      <ul></ul>
+    </section>
+    <section id="CompletedTasks">
+      <h2>
+        <span>Completed</span>
+        <button class="-small -danger" disabled id="ClearCompleted">Clear</button>
+      </h2>
+      <ul></ul>
+    </section>
+    <div id="Break">
+      <h1 id="BreakTime"></h1>
+      <div id="BreakProgressBar">
+        <div id="BreakProgress"></div>
+      </div>
+    </div>
+    <audio id="Chime">
+      <source src="chime.wav" type="audio/wav" />
+    </audio>
+    <script>
+      const emptyState = {
+        completedTasks: [],
+        currentTask: null,
+        todoTasks: []
+      }
+
+      const $ = sel => document.querySelector(sel)
+
+      const breakContainer = $('#Break')
+      const breakProgress = $('#BreakProgress')
+      const breakTime = $('#BreakTime')
+      const chimeAudio = $('#Chime')
+      const clearCompletedButton = $('#ClearCompleted')
+      const clearTodosButton = $('#ClearTodos')
+      const completedList = $('#CompletedTasks ul')
+      const currentTask = $('#CurrentTask')
+      const currentTaskName = $('#CurrentTask .name')
+      const currentTimer = $('#CurrentTask .timer')
+      const finishTaskButton = $('#FinishTask')
+      const interruptedButton = $('#Interrupted')
+      const interruptedCount = $('#Interrupted .count')
+      const todoList = $('#TodoTasks ul')
+
+      let breaking = false
+      let currentTimerInterval = null
+      let currentTimerTimeout = null
+      let state = JSON.parse(window.localStorage.getItem('state')) || emptyState
+
+      function addTodo () {
+        const task = { id: Date.now().toString(), name: '' }
+        appendTodo(task, true)
+        updateState({ todoTasks: state.todoTasks.concat(task) })
+      }
+
+      function appendCompleted (task) {
+        const item = document.createElement('li')
+        item.textContent = task.name
+        const timer = document.createElement('span')
+        timer.classList.add('timer')
+        const elapsedMinutes = Math.ceil((task.finished - task.started) / 60000)
+        const anyInterruptions = task.interruptions > 0
+          ? `, ${task.interruptions} interruption${task.interruptions === 1 ? '' : 's'}`
+          : ''
+        timer.textContent = `${elapsedMinutes} min${anyInterruptions}`
+        item.appendChild(timer)
+        completedList.appendChild(item)
+      }
+
+      function appendTodo (task, focus = false) {
+        const item = document.createElement('li')
+        item.setAttribute('data-id', task.id)
+        const startButton = document.createElement('button')
+        startButton.classList.add('-start')
+        startButton.addEventListener('click', () => {
+          todoList.removeChild(item)
+          updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
+          startTask(task)
+        })
+        startButton.textContent = 'Start'
+        if (task.name.length === 0) {
+          startButton.setAttribute('disabled', '')
+        }
+        item.appendChild(startButton)
+        const nameInput = document.createElement('input')
+        nameInput.setAttribute('type', 'text')
+        nameInput.value = task.name
+        nameInput.addEventListener('input', () => {
+          task.name = nameInput.value
+          if (nameInput.value.length > 0 && state.currentTask === null && !breaking) {
+            enable(startButton)
+          } else {
+            disable(startButton)
+          }
+          updateState({
+            todoTasks: state.todoTasks.map(t => t.id === task.id ? task : t)
+          })
+        })
+        item.appendChild(nameInput)
+        const deleteButton = document.createElement('button')
+        deleteButton.classList.add('-danger', '-icon')
+        deleteButton.textContent = '×'
+        deleteButton.addEventListener('click', () => {
+          if (window.confirm('Are you sure?')) {
+            todoList.removeChild(item)
+            updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
+          }
+        })
+        item.appendChild(deleteButton)
+        todoList.appendChild(item)
+        if (focus) setTimeout(() => nameInput.focus(), 50)
+      }
+
+      function breakMinutes (minutesSpent) {
+        if (minutesSpent <= 4) return 1
+        if (minutesSpent <= 25) return 5
+        if (minutesSpent <= 50) return 8
+        if (minutesSpent <= 90) return 10
+        return 15
+      }
+
+      function disable (button) {
+        if (!button.hasAttribute('disabled')) {
+          button.setAttribute('disabled', '')
+        }
+      }
+
+      function enable (button) {
+        if (button.hasAttribute('disabled')) {
+          button.removeAttribute('disabled')
+        }
+      }
+
+      function populateCurrentTask (task) {
+        currentTaskName.textContent = task.name
+        const updateCount = () => {
+          const elapsed = Math.ceil((Date.now() - task.started) / 60000)
+          currentTimer.textContent = `${Math.max(1, elapsed)} min`
+        }
+        updateCount()
+        const currentMs = Date.now() % 60000
+        const taskOffset = task.started % 60000
+        const delay = currentMs > taskOffset
+          ? 60000 + taskOffset - currentMs
+          : taskOffset - currentMs
+        currentTimerTimeout = setTimeout(() => {
+          updateCount()
+          currentTimerTimeout = null
+          currentTimerInterval = setInterval(updateCount, 60000)
+        }, delay)
+        interruptedCount.textContent = '0'
+        currentTask.classList.add('-busy')
+      }
+
+      function startBreak (minutesSpent) {
+        breaking = true
+        const breakMs = breakMinutes(minutesSpent) * 60000
+        const start = Date.now()
+        let remainingSeconds = Math.ceil(breakMs / 1000)
+        breakTime.textContent = remainingSeconds
+        breakProgress.style.width = '0%'
+        breakContainer.classList.add('-active')
+        const countdown = setInterval(() => {
+          const elapsedMs = Date.now() - start
+          remainingSeconds = Math.ceil((breakMs - elapsedMs) / 1000)
+          breakTime.textContent = remainingSeconds
+          breakProgress.style.width = `${100 * elapsedMs / breakMs}%`
+          if (breaking && elapsedMs >= (breakMs - 250)) {
+            breakContainer.classList.remove('-active')
+            breaking = false
+            Array.from(document.querySelectorAll('button.-start'))
+              .filter(b => b.nextSibling.value.length > 0)
+              .forEach(b => enable(b))
+          }
+          if (elapsedMs >= breakMs) {
+            chimeAudio.play()
+            clearInterval(countdown)
+          }
+        }, 250)
+      }
+
+      function startTask (todo) {
+        const currentTask = {
+          ...todo,
+          interruptions: 0,
+          started: Date.now()
+        }
+        populateCurrentTask(currentTask)
+        updateState({
+          currentTask,
+          todoTasks: state.todoTasks.filter(t => t.id !== todo.id)
+        })
+      }
+
+      function updateState (changes = {}) {
+        state = { ...state, ...changes }
+        window.localStorage.setItem('state', JSON.stringify(state))
+
+        if (state.currentTask === null) {
+          disable(finishTaskButton)
+          disable(interruptedButton)
+        } else {
+          interruptedCount.textContent = state.currentTask.interruptions.toString()
+          enable(finishTaskButton)
+          enable(interruptedButton)
+          Array.from(document.querySelectorAll('button.-start'))
+            .forEach(b => disable(b))
+        }
+
+        if (state.todoTasks.length > 0) {
+          enable(clearTodosButton)
+        } else {
+          disable(clearTodosButton)
+        }
+
+        if (state.completedTasks.length > 0) {
+          enable(clearCompletedButton)
+        } else {
+          disable(clearCompletedButton)
+        }
+      }
+
+      if (state.currentTask) {
+        populateCurrentTask(state.currentTask)
+      }
+
+      state.todoTasks.forEach(t => appendTodo(t))
+      state.completedTasks.forEach(t => appendCompleted(t))
+
+      finishTaskButton.addEventListener('click', () => {
+        const task = { ...state.currentTask, finished: Date.now() }
+        appendCompleted(task)
+        currentTask.classList.remove('-busy')
+        interruptedCount.textContent = '—'
+        breakContainer.classList.add('-active')
+        if (currentTimerTimeout) {
+          clearTimeout(currentTimerTimeout)
+          currentTimerTimeout = null
+        }
+        if (currentTimerInterval) {
+          clearInterval(currentTimerInterval)
+          currentTimerInterval = null
+        }
+        startBreak(Math.ceil((task.finished - task.started) / 60000))
+        updateState({
+          completedTasks: state.completedTasks.concat(task),
+          currentTask: null
+        })
+      })
+
+      interruptedButton.addEventListener('click', () => {
+        updateState({
+          currentTask: {
+            ...state.currentTask,
+            interruptions: state.currentTask.interruptions + 1
+          }
+        })
+      })
+
+      $('#AddTodo').addEventListener('click', addTodo)
+
+      clearCompletedButton.addEventListener('click', () => {
+        if (window.confirm('Are you sure?')) {
+          completedList.innerHTML = ''
+          updateState({ completedTasks: [] })
+        }
+      })
+
+      clearTodosButton.addEventListener('click', () => {
+        if (window.confirm('Are you sure?')) {
+          todoList.innerHTML = ''
+          updateState({ todoTasks: [] })
+        }
+      })
+
+      updateState()
+
+      window.addEventListener('keydown', event => {
+        if (event.target === document.body && event.key === 'a') addTodo()
+      })
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+      }
+    </script>
+  </body>
+</html>

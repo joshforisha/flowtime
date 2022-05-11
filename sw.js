@@ -1,4 +1,4 @@
-const version = '2022.5.11'
+const version = '2022.5.11b'
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -14,7 +14,6 @@ self.addEventListener('install', event => {
         './icon-32.png',
         './icon-512.png',
         './index.html',
-        './main.js',
         './manifest.json',
         './mstile.png',
         './safari-pinned-tab.svg'
