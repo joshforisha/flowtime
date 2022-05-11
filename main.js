@@ -4,23 +4,26 @@ const emptyState = {
   todoTasks: []
 }
 
-const addTodoButton = document.getElementById('AddTodo')
-const breakContainer = document.getElementById('Break')
-const breakProgress = document.getElementById('BreakProgress')
-const breakTime = document.getElementById('BreakTime')
-const chimeAudio = document.getElementById('Chime')
-const clearCompletedButton = document.getElementById('ClearCompleted')
-const clearTodosButton = document.getElementById('ClearTodos')
-const completedList = document.querySelector('#CompletedTasks ul')
-const currentTask = document.getElementById('CurrentTask')
-const currentTaskName = document.querySelector('#CurrentTask .name')
-const currentTimer = document.querySelector('#CurrentTask .timer')
-const finishTaskButton = document.getElementById('FinishTask')
-const interruptedButton = document.getElementById('Interrupted')
-const interruptedCount = document.querySelector('#Interrupted .count')
-const todoList = document.querySelector('#TodoTasks ul')
+const $ = sel => document.querySelector(sel)
+
+const breakContainer = $('#Break')
+const breakProgress = $('#BreakProgress')
+const breakTime = $('#BreakTime')
+const chimeAudio = $('#Chime')
+const clearCompletedButton = $('#ClearCompleted')
+const clearTodosButton = $('#ClearTodos')
+const completedList = $('#CompletedTasks ul')
+const currentTask = $('#CurrentTask')
+const currentTaskName = $('#CurrentTask .name')
+const currentTimer = $('#CurrentTask .timer')
+const finishTaskButton = $('#FinishTask')
+const interruptedButton = $('#Interrupted')
+const interruptedCount = $('#Interrupted .count')
+const todoList = $('#TodoTasks ul')
 
 let breaking = false
+let currentTimerInterval = null
+let currentTimerTimeout = null
 let state = JSON.parse(window.localStorage.getItem('state')) || emptyState
 
 function addTodo () {
@@ -109,12 +112,22 @@ function enable (button) {
 
 function populateCurrentTask (task) {
   currentTaskName.textContent = task.name
-  const count = () => {
-    const elapsedMs = Date.now() - task.started
-    currentTimer.textContent = `${Math.max(1, Math.ceil(elapsedMs / 60_000))} min`
-    setTimeout(count, 60_000)
+  const updateCount = () => {
+    console.log(Date.now() % 3_600_000, '!update')
+    const elapsed = Math.ceil((Date.now() - task.started) / 60_000)
+    currentTimer.textContent = `${Math.max(1, elapsed)} min`
   }
-  count()
+  updateCount()
+  const currentMs = Date.now() % 60_000
+  const taskOffset = task.started % 60_000
+  const delay = currentMs > taskOffset
+    ? 60_000 + taskOffset - currentMs
+    : taskOffset - currentMs
+  currentTimerTimeout = setTimeout(() => {
+    updateCount()
+    currentTimerTimeout = null
+    currentTimerInterval = setInterval(updateCount, 60_000)
+  }, delay)
   interruptedCount.textContent = '0'
   currentTask.classList.add('-busy')
 }
@@ -132,7 +145,7 @@ function startBreak (minutesSpent) {
     remainingSeconds = Math.ceil((breakMs - elapsedMs) / 1000)
     breakTime.textContent = remainingSeconds
     breakProgress.style.width = `${100 * elapsedMs / breakMs}%`
-    if (elapsedMs >= (breakMs - 500)) {
+    if (breaking && elapsedMs >= (breakMs - 250)) {
       breakContainer.classList.remove('-active')
       breaking = false
       Array.from(document.querySelectorAll('button.-start'))
@@ -200,6 +213,14 @@ finishTaskButton.addEventListener('click', () => {
   currentTask.classList.remove('-busy')
   interruptedCount.textContent = '—'
   breakContainer.classList.add('-active')
+  if (currentTimerTimeout) {
+    clearTimeout(currentTimerTimeout)
+    currentTimerTimeout = null
+  }
+  if (currentTimerInterval) {
+    clearInterval(currentTimerInterval)
+    currentTimerInterval = null
+  }
   startBreak(Math.ceil((task.finished - task.started) / 60000))
   updateState({
     completedTasks: state.completedTasks.concat(task),
@@ -216,7 +237,7 @@ interruptedButton.addEventListener('click', () => {
   })
 })
 
-addTodoButton.addEventListener('click', addTodo)
+$('#AddTodo').addEventListener('click', addTodo)
 
 clearCompletedButton.addEventListener('click', () => {
   if (window.confirm('Are you sure?')) {
