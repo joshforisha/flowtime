@@ -324,22 +324,20 @@
         todoTasks: []
       }
 
-      const $ = sel => document.querySelector(sel)
-
-      const breakContainer = $('#Break')
-      const breakProgress = $('#BreakProgress')
-      const breakTime = $('#BreakTime')
-      const chimeAudio = $('#Chime')
-      const clearCompletedButton = $('#ClearCompleted')
-      const clearTodosButton = $('#ClearTodos')
-      const completedList = $('#CompletedTasks ul')
-      const currentTask = $('#CurrentTask')
-      const currentTaskName = $('#CurrentTask .name')
-      const currentTimer = $('#CurrentTask .timer')
-      const finishTaskButton = $('#FinishTask')
-      const interruptedButton = $('#Interrupted')
-      const interruptedCount = $('#Interrupted .count')
-      const todoList = $('#TodoTasks ul')
+      const breakContainer = document.getElementById('Break')
+      const breakProgress = document.getElementById('BreakProgress')
+      const breakTime = document.getElementById('BreakTime')
+      const chimeAudio = document.getElementById('Chime')
+      const clearCompletedButton = document.getElementById('ClearCompleted')
+      const clearTodosButton = document.getElementById('ClearTodos')
+      const completedList = document.querySelector('#CompletedTasks ul')
+      const currentTask = document.getElementById('CurrentTask')
+      const currentTaskName = document.querySelector('#CurrentTask .name')
+      const currentTimer = document.querySelector('#CurrentTask .timer')
+      const finishTaskButton = document.getElementById('FinishTask')
+      const interruptedButton = document.getElementById('Interrupted')
+      const interruptedCount = document.querySelector('#Interrupted .count')
+      const todoList = document.querySelector('#TodoTasks ul')
 
       let breaking = false
       let currentTimerInterval = null
@@ -353,61 +351,76 @@
       }
 
       function appendCompleted (task) {
-        const item = document.createElement('li')
-        item.textContent = task.name
-        const timer = document.createElement('span')
-        timer.classList.add('timer')
         const elapsedMinutes = Math.ceil((task.finished - task.started) / 60000)
         const anyInterruptions = task.interruptions > 0
           ? `, ${task.interruptions} interruption${task.interruptions === 1 ? '' : 's'}`
           : ''
-        timer.textContent = `${elapsedMinutes} min${anyInterruptions}`
-        item.appendChild(timer)
-        completedList.appendChild(item)
+
+        completedList.appendChild(h('li', {
+          textContent: task.name,
+          children: [
+            h('span', {
+              classes: ['timer'],
+              textContent: `${elapsedMinutes} min${anyInterruptions}`
+            })
+          ]
+        }))
       }
 
       function appendTodo (task, focus = false) {
-        const item = document.createElement('li')
-        item.setAttribute('data-id', task.id)
-        const startButton = document.createElement('button')
-        startButton.classList.add('-start')
-        startButton.addEventListener('click', () => {
-          todoList.removeChild(item)
-          updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
-          startTask(task)
+        const item = h('li', {
+          children: [
+            h('button', {
+              textContent: 'Start',
+              classes: ['-start'],
+              attributes: {
+                disabled: task.name.length === 0 ? '' : undefined
+              },
+              actions: {
+                click: event => {
+                  todoList.removeChild(event.target.closest('li'))
+                  updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
+                  startTask(task)
+                }
+              }
+            }),
+            h('input', {
+              attributes: {
+                'aria-label': 'task name',
+                type: 'text',
+                value: task.name
+              },
+              actions: {
+                input: event => {
+                  task.name = event.target.value
+                  if (event.target.value.length > 0 && state.currentTask === null && !breaking) {
+                    enable(event.target.closest('li').querySelector('button.-start'))
+                  } else {
+                    disable(event.target.closest('li').querySelector('button.-start'))
+                  }
+                  updateState({
+                    todoTasks: state.todoTasks.map(t => t.id === task.id ? task : t)
+                  })
+                }
+              }
+            }),
+            h('button', {
+              classes: ['-danger', '-icon'],
+              textContent: '×',
+              actions: {
+                click: event => {
+                  if (window.confirm('Are you sure?')) {
+                    todoList.removeChild(event.target.closest('li'))
+                    updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
+                  }
+                }
+              }
+            })
+          ]
         })
-        startButton.textContent = 'Start'
-        if (task.name.length === 0) {
-          startButton.setAttribute('disabled', '')
-        }
-        item.appendChild(startButton)
-        const nameInput = document.createElement('input')
-        nameInput.setAttribute('type', 'text')
-        nameInput.value = task.name
-        nameInput.addEventListener('input', () => {
-          task.name = nameInput.value
-          if (nameInput.value.length > 0 && state.currentTask === null && !breaking) {
-            enable(startButton)
-          } else {
-            disable(startButton)
-          }
-          updateState({
-            todoTasks: state.todoTasks.map(t => t.id === task.id ? task : t)
-          })
-        })
-        item.appendChild(nameInput)
-        const deleteButton = document.createElement('button')
-        deleteButton.classList.add('-danger', '-icon')
-        deleteButton.textContent = '×'
-        deleteButton.addEventListener('click', () => {
-          if (window.confirm('Are you sure?')) {
-            todoList.removeChild(item)
-            updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
-          }
-        })
-        item.appendChild(deleteButton)
+
         todoList.appendChild(item)
-        if (focus) setTimeout(() => nameInput.focus(), 50)
+        if (focus) setTimeout(() => item.querySelector('input').focus(), 5)
       }
 
       function breakMinutes (minutesSpent) {
@@ -428,6 +441,28 @@
         if (button.hasAttribute('disabled')) {
           button.removeAttribute('disabled')
         }
+      }
+
+      function h (type, { actions, attributes, children, classes, textContent } = {}) {
+        const element = document.createElement(type)
+        if (attributes) {
+          Object.entries(attributes).forEach(([key, value]) => {
+            if (value !== undefined) element.setAttribute(key, value)
+          })
+        }
+        if (classes) element.classList.add(...classes)
+        if (textContent) element.textContent = textContent
+        if (children) {
+          children.forEach(child => {
+            element.appendChild(child)
+          })
+        }
+        if (actions) {
+          Object.entries(actions).forEach(([eventType, handler]) => {
+            element.addEventListener(eventType, handler)
+          })
+        }
+        return element
       }
 
       function populateCurrentTask (task) {
@@ -559,7 +594,7 @@
         })
       })
 
-      $('#AddTodo').addEventListener('click', addTodo)
+      document.getElementById('AddTodo').addEventListener('click', addTodo)
 
       clearCompletedButton.addEventListener('click', () => {
         if (window.confirm('Are you sure?')) {
