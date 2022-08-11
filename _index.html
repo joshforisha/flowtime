@@ -75,6 +75,13 @@
         opacity: 0.25;
       }
 
+      button.-anchor {
+        background-color: var(--nord3);
+        color: var(--nord4);
+        cursor: grab;
+        margin-right: 5px;
+      }
+
       button.-caution {
         background-color: var(--nordD);
       }
@@ -342,6 +349,7 @@
       let breaking = false
       let currentTimerInterval = null
       let currentTimerTimeout = null
+      let draggingItem
       let state = JSON.parse(window.localStorage.getItem('state')) || emptyState
 
       function addTodo () {
@@ -369,7 +377,36 @@
 
       function appendTodo (task, focus = false) {
         const item = h('li', {
+          attributes: {
+            'data-id': task.id,
+            draggable: 'true'
+          },
+          actions: {
+            dragend: event => {
+              const todoTasks = Array.from(todoList.children)
+                .map(item => state.todoTasks.find(t => t.id === item.getAttribute('data-id')))
+              updateState({ todoTasks })
+            },
+            dragstart: (event, item) => {
+              draggingItem = item
+            },
+            dragover: (event, item) => {
+              event.preventDefault()
+              if (item === draggingItem) return
+              const src = findTodoIndex(draggingItem)
+              const dest = findTodoIndex(item)
+              if (dest < src) return todoList.insertBefore(draggingItem, item)
+              if (dest === todoList.children.length - 1) return todoList.appendChild(draggingItem)
+              todoList.insertBefore(draggingItem, todoList.children.item(dest + 1))
+            }
+          },
           children: [
+            /* TODO: Figure out anchor-based dragging
+            h('button', {
+              textContent: '≡',
+              classes: ['-anchor']
+            }),
+            */
             h('button', {
               textContent: 'Start',
               classes: ['-start'],
@@ -446,6 +483,12 @@
         }
       }
 
+      function findTodoIndex (item) {
+        for (let i in todoList.children) {
+          if (todoList.children.item(i) === item) return i
+        }
+      }
+
       function h (type, { actions, attributes, children, classes, textContent } = {}) {
         const element = document.createElement(type)
         if (attributes) {
@@ -462,7 +505,7 @@
         }
         if (actions) {
           Object.entries(actions).forEach(([eventType, handler]) => {
-            element.addEventListener(eventType, handler)
+            element.addEventListener(eventType, event => handler(event, element))
           })
         }
         return element
@@ -487,6 +530,16 @@
         }, delay)
         interruptedCount.textContent = '0'
         currentTask.classList.add('-busy')
+      }
+
+      function renderCompletedList () {
+        completedList.innerHTML = ''
+        state.completedTasks.forEach(t => appendCompleted(t))
+      }
+
+      function renderTodoList () {
+        todoList.innerHTML = ''
+        state.todoTasks.forEach(t => appendTodo(t))
       }
 
       function startBreak (minutesSpent) {
@@ -529,8 +582,8 @@
         })
       }
 
-      function updateState (changes = {}) {
-        state = { ...state, ...changes }
+      function updateState (changes) {
+        if (changes) state = { ...state, ...changes }
         window.localStorage.setItem('state', JSON.stringify(state))
 
         if (state.currentTask === null) {
@@ -561,8 +614,8 @@
         populateCurrentTask(state.currentTask)
       }
 
-      state.todoTasks.forEach(t => appendTodo(t))
-      state.completedTasks.forEach(t => appendCompleted(t))
+      renderTodoList()
+      renderCompletedList()
 
       finishTaskButton.addEventListener('click', () => {
         const task = { ...state.currentTask, finished: Date.now() }
