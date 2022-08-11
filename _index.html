@@ -391,6 +391,9 @@
                 value: task.name
               },
               actions: {
+                keydown: event => {
+                  if (event.key === 'Enter') event.target.blur()
+                },
                 input: event => {
                   task.name = event.target.value
                   if (event.target.value.length > 0 && state.currentTask === null && !breaking) {
@@ -615,10 +618,6 @@
       window.addEventListener('keydown', event => {
         if (event.target === document.body && event.key === 'a') addTodo()
       })
-
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-      }
     </script>
   </body>
 </html>
