@@ -75,13 +75,6 @@
         opacity: 0.25;
       }
 
-      button.-anchor {
-        background-color: var(--nord3);
-        color: var(--nord4);
-        cursor: grab;
-        margin-right: 5px;
-      }
-
       button.-caution {
         background-color: var(--nordD);
       }
@@ -93,6 +86,13 @@
 
       button.-good {
         background-color: var(--nordE);
+      }
+
+      button.-handle {
+        background-color: var(--nord3);
+        color: var(--nord4);
+        cursor: grab;
+        margin-right: 5px;
       }
 
       button.-icon {
@@ -378,8 +378,7 @@
       function appendTodo (task, focus = false) {
         const item = h('li', {
           attributes: {
-            'data-id': task.id,
-            draggable: 'true'
+            'data-id': task.id
           },
           actions: {
             dragend: event => {
@@ -401,12 +400,18 @@
             }
           },
           children: [
-            /* TODO: Figure out anchor-based dragging
             h('button', {
               textContent: '≡',
-              classes: ['-anchor']
+              classes: ['-handle'],
+              actions: {
+                mousedown: event => {
+                  event.target.parentNode.setAttribute('draggable', 'true')
+                },
+                mouseup: event => {
+                  event.target.parentNode.setAttribute('draggable', 'false')
+                }
+              }
             }),
-            */
             h('button', {
               textContent: 'Start',
               classes: ['-start'],
