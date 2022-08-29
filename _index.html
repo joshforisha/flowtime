@@ -393,6 +393,8 @@
               const todoTasks = Array.from(todoList.children)
                 .map(item => state.todoTasks.find(t => t.id === item.getAttribute('data-id')))
               updateState({ todoTasks })
+              draggingItem.removeAttribute('draggable')
+              draggingItem = undefined
             },
             dragstart: (event, item) => {
               draggingItem = item
@@ -414,9 +416,6 @@
               actions: {
                 mousedown: event => {
                   event.target.parentNode.setAttribute('draggable', 'true')
-                },
-                mouseup: event => {
-                  event.target.parentNode.setAttribute('draggable', 'false')
                 }
               }
             }),
