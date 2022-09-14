@@ -88,13 +88,6 @@
         background-color: var(--nordE);
       }
 
-      button.-handle {
-        background-color: var(--nord3);
-        color: var(--nord4);
-        cursor: grab;
-        margin-right: 5px;
-      }
-
       button.-icon {
         font-size: 1.5rem;
         line-height: 1;
@@ -103,6 +96,51 @@
 
       button.-small {
         font-size: 0.67em;
+      }
+
+      button.handle {
+        background-color: var(--nord3);
+        color: var(--nord4);
+        cursor: grab;
+      }
+
+      button[data-action="edit-flags"] {
+        background-color: var(--nord3);
+        color: var(--nord4);
+        margin-right: 5px;
+      }
+
+      button[data-action="start-task"] {
+        margin-left: 5px;
+      }
+
+      dialog {
+        align-items: center;
+        background-color: var(--nord6);
+        border-radius: 2px;
+        border-style: none;
+        flex-direction: column;
+      }
+
+      dialog[open] {
+        display: flex;
+      }
+
+      dialog::backdrop {
+        backdrop-filter: blur(5px);
+      }
+
+      dialog > form {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      fieldset {
+        border-style: none;
+        margin: 0 0 30px;
+        padding: 0;
       }
 
       h1 {
@@ -124,7 +162,20 @@
         margin-right: 10px;
       }
 
-      input {
+      input[type="checkbox"] {
+        appearance: none;
+        background-color: var(--nord0);
+        border-radius: 2px;
+        height: 1.25em;
+        padding: 0;
+        width: 1.25em;
+      }
+
+      input[type="checkbox"]:checked {
+        background-color: var(--nordE);
+      }
+
+      input[type="text"] {
         background-color: transparent;
         border-color: transparent;
         border-radius: 5px;
@@ -135,9 +186,32 @@
         width: 100%;
       }
 
-      input:focus-visible {
+      input[type="text"]:focus-visible {
         outline-color: var(--nord8);
         outline-style: solid;
+      }
+
+      label {
+        align-items: center;
+        cursor: pointer;
+        display: flex;
+      }
+
+      label input[type="checkbox"] {
+        margin-right: 5px;
+      }
+
+      label input[type="checkbox"]:not(:checked) ~ span {
+        color: var(--nord4);
+        opacity: 0.6;
+      }
+
+      label:hover input[type="checkbox"]:not(:checked) {
+        background-color: var(--nord2);
+      }
+
+      label:hover input[type="checkbox"]:not(:checked) ~ span {
+        opacity: 0.8;
       }
 
       section {
@@ -149,9 +223,45 @@
       }
 
       ul {
-        background-color: var(--nord1);
+        list-style-type: none;
         margin: 0;
-        padding-left: 30px;
+        padding-left: 0;
+      }
+
+      .task-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .task-item .content {
+        border-top: 1px solid var(--nord2);
+        display: flex;
+        margin-top: 5px;
+        padding-top: 5px;
+      }
+
+      .task-item .content input[type="text"] {
+        margin: 0 5px;
+      }
+
+      .task-item .flags {
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        padding-left: calc(4rem + 64px);
+      }
+
+      .task-flag {
+        background-color: var(--nord5);
+        display: flex;
+        margin-bottom: 10px;
+      }
+
+      .task-flag input[type="text"] {
+      }
+
+      .tasks-list {
+        background-color: var(--nord1);
       }
 
       .timer {
@@ -250,22 +360,6 @@
         opacity: 0.5;
       }
 
-      #TodoTasks li {
-        border-top: 1px solid var(--nord2);
-        display: flex;
-        margin-top: 5px;
-        padding-top: 5px;
-      }
-
-      #TodoTasks li input {
-        margin: 0 5px;
-      }
-
-      #TodoTasks ul {
-        list-style-type: none;
-        padding-left: 0;
-      }
-
       @media screen and (min-width: 768px) {
         :root {
           font-size: 20px;
@@ -314,7 +408,7 @@
         <button class="-small -good" id="AddTodo">Add Todo</button>
         <button class="-small -danger" disabled id="ClearTodos">Clear</button>
       </h2>
-      <ul></ul>
+      <ul class="tasks-list"></ul>
     </section>
     <section id="CompletedTasks">
       <h2>
@@ -332,6 +426,13 @@
     <audio id="Chime">
       <source src="chime.wav" type="audio/wav" />
     </audio>
+    <dialog id="EditFlags">
+      <h2>FUN-2306-select-wallet</h2>
+      <form method="dialog">
+        <fieldset></fieldset>
+        <button type="submit">Close</button>
+      </form>
+    </dialog>
     <script>
       const emptyState = {
         completedTasks: [],
@@ -339,20 +440,24 @@
         todoTasks: []
       }
 
-      const breakContainer = document.getElementById('Break')
-      const breakProgress = document.getElementById('BreakProgress')
-      const breakTime = document.getElementById('BreakTime')
-      const chimeAudio = document.getElementById('Chime')
-      const clearCompletedButton = document.getElementById('ClearCompleted')
-      const clearTodosButton = document.getElementById('ClearTodos')
-      const completedList = document.querySelector('#CompletedTasks ul')
-      const currentTask = document.getElementById('CurrentTask')
-      const currentTaskName = document.querySelector('#CurrentTask .name')
-      const currentTimer = document.querySelector('#CurrentTask .timer')
-      const finishTaskButton = document.getElementById('FinishTask')
-      const interruptedButton = document.getElementById('Interrupted')
-      const interruptedCount = document.querySelector('#Interrupted .count')
-      const todoList = document.querySelector('#TodoTasks ul')
+      const $ = (sel) => document.querySelector(sel)
+      const $$ = (sel) => Array.from(document.querySelectorAll(sel))
+
+      const breakContainer = $('#Break')
+      const breakProgress = $('#BreakProgress')
+      const breakTime = $('#BreakTime')
+      const chimeAudio = $('#Chime')
+      const clearCompletedButton = $('#ClearCompleted')
+      const clearTodosButton = $('#ClearTodos')
+      const completedList = $('#CompletedTasks ul')
+      const currentTask = $('#CurrentTask')
+      const currentTaskName = $('#CurrentTask .name')
+      const currentTimer = $('#CurrentTask .timer')
+      const editFlagsDialog = $('#EditFlags')
+      const finishTaskButton = $('#FinishTask')
+      const interruptedButton = $('#Interrupted')
+      const interruptedCount = $('#Interrupted .count')
+      const todoList = $('#TodoTasks ul')
 
       let breaking = false
       let currentTimerInterval = null
@@ -361,7 +466,11 @@
       let state = JSON.parse(window.localStorage.getItem('state')) || emptyState
 
       function addTodo () {
-        const task = { id: Date.now().toString(), name: '' }
+        const task = {
+          flags: [],
+          id: generateId(),
+          name: ''
+        }
         appendTodo(task, true)
         updateState({ todoTasks: state.todoTasks.concat(task) })
       }
@@ -385,6 +494,7 @@
 
       function appendTodo (task, focus = false) {
         const item = h('li', {
+          classes: ['task-item'],
           attributes: {
             'data-id': task.id
           },
@@ -410,68 +520,84 @@
             }
           },
           children: [
-            h('button', {
-              textContent: '≡',
-              classes: ['-handle'],
-              actions: {
-                mousedown: event => {
-                  event.target.parentNode.setAttribute('draggable', 'true')
-                }
-              }
-            }),
-            h('button', {
-              textContent: 'Start',
-              classes: ['-start'],
-              attributes: {
-                disabled: task.name.length === 0 ? '' : undefined
-              },
-              actions: {
-                click: event => {
-                  todoList.removeChild(event.target.closest('li'))
-                  updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
-                  startTask(task)
-                }
-              }
-            }),
-            h('input', {
-              attributes: {
-                'aria-label': 'task name',
-                type: 'text',
-                value: task.name
-              },
-              actions: {
-                keydown: event => {
-                  if (event.key === 'Enter') event.target.blur()
-                },
-                input: event => {
-                  task.name = event.target.value
-                  if (event.target.value.length > 0 && state.currentTask === null && !breaking) {
-                    enable(event.target.closest('li').querySelector('button.-start'))
-                  } else {
-                    disable(event.target.closest('li').querySelector('button.-start'))
+            h('div', {
+              classes: ['content'],
+              children: [
+                h('button', {
+                  textContent: '≡',
+                  classes: ['handle'],
+                  actions: {
+                    mousedown: event => {
+                      event.target.parentNode.parentNode.setAttribute('draggable', 'true')
+                    }
                   }
-                  updateState({
-                    todoTasks: state.todoTasks.map(t => t.id === task.id ? task : t)
-                  })
-                }
-              }
-            }),
-            h('button', {
-              classes: ['-danger', '-icon'],
-              textContent: '×',
-              actions: {
-                click: event => {
-                  if (window.confirm('Are you sure?')) {
-                    todoList.removeChild(event.target.closest('li'))
-                    updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
+                }),
+                h('button', {
+                  textContent: 'Start',
+                  attributes: {
+                    'data-action': 'start-task',
+                    disabled: task.name.length === 0 ? '' : undefined
+                  },
+                  actions: {
+                    click: event => {
+                      todoList.removeChild(event.target.closest('li'))
+                      updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
+                      startTask(task)
+                    }
                   }
-                }
-              }
+                }),
+                h('input', {
+                  attributes: {
+                    'aria-label': 'task name',
+                    type: 'text',
+                    value: task.name
+                  },
+                  actions: {
+                    keydown: event => {
+                      if (event.key === 'Enter') event.target.blur()
+                    },
+                    input: event => {
+                      task.name = event.target.value
+                      const startButton = event.target.closest('li').querySelector('button[data-action="start-task"]')
+                      toggle(startButton, event.target.value.length > 0 && state.currentTask === null && !breaking)
+                      updateTodo(task)
+                    }
+                  }
+                }),
+                h('button', {
+                  textContent: '⋮',
+                  attributes: {
+                    'data-action': 'edit-flags'
+                  },
+                  actions: {
+                    click: () => {
+                      editFlags(task)
+                    }
+                  }
+                }),
+                h('button', {
+                  classes: ['-danger', '-icon'],
+                  textContent: '×',
+                  actions: {
+                    click: event => {
+                      if (window.confirm('Are you sure?')) {
+                        todoList.removeChild(event.target.closest('li'))
+                        updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
+                      }
+                    }
+                  }
+                })
+              ]
+            }),
+            h('div', {
+              classes: ['flags']
             })
           ]
         })
 
         todoList.appendChild(item)
+        renderTaskFlags(task)
+
         if (focus) setTimeout(() => item.querySelector('input').focus(), 5)
       }
 
@@ -489,6 +615,47 @@
         }
       }
 
+      function editFlags (task) {
+        $('#EditFlags h2').textContent = task.name
+        const fieldset = $('#EditFlags fieldset')
+        fieldset.innerHTML = ''
+
+        const flagsList = h('ul', {
+          classes: ['flags-list']
+        })
+
+        for (const flag of task.flags) {
+          flagsList.appendChild(makeTaskFlag(task, flag))
+        }
+        fieldset.appendChild(flagsList)
+
+        const addButton = h('button', {
+          actions: {
+            click: () => {
+              const flag = {
+                checked: false,
+                id: generateId(),
+                name: ''
+              }
+              task.flags = task.flags.concat(flag)
+              updateTodo(task)
+              const flagEl = makeTaskFlag(task, flag)
+              flagsList.appendChild(flagEl)
+              flagEl.querySelector('input').focus()
+              renderTaskFlags(task)
+            }
+          },
+          attributes: {
+            type: 'button'
+          },
+          classes: ['-good'],
+          textContent: 'Add'
+        })
+        fieldset.appendChild(addButton)
+
+        editFlagsDialog.showModal()
+      }
+
       function enable (button) {
         if (button.hasAttribute('disabled')) {
           button.removeAttribute('disabled')
@@ -499,6 +666,10 @@
         for (let i in todoList.children) {
           if (todoList.children.item(i) === item) return i
         }
+      }
+
+      function generateId () {
+        return Date.now().toString()
       }
 
       function h (type, { actions, attributes, children, classes, textContent } = {}) {
@@ -512,7 +683,7 @@
         if (textContent) element.textContent = textContent
         if (children) {
           children.forEach(child => {
-            element.appendChild(child)
+            if (child) element.appendChild(child)
           })
         }
         if (actions) {
@@ -521,6 +692,46 @@
           })
         }
         return element
+      }
+
+      function makeTaskFlag (task, flag) {
+        return h('li', {
+          classes: ['task-flag'],
+          children: [
+            h('input', {
+              attributes: {
+                'aria-label': 'flag name',
+                type: 'text',
+                value: flag.name
+              },
+              actions: {
+                input: event => {
+                  flag.name = event.target.value
+                  task.flags = task.flags.map(f => f.id === flag.id ? flag : f)
+                  updateTodo(task)
+                  renderTaskFlags(task)
+                }
+              }
+            }),
+            h('button', {
+              actions: {
+                click: () => {
+                  if (window.confirm('Are you sure?')) {
+                    $('#EditFlags ul').removeChild(event.target.closest('li'))
+                    task.flags = task.flags.filter(f => f.id !== flag.id)
+                    updateTodo(task)
+                    renderTaskFlags(task)
+                  }
+                }
+              },
+              attributes: {
+                type: 'button'
+              },
+              classes: ['-danger', '-icon'],
+              textContent: '×'
+            })
+          ]
+        })
       }
 
       function populateCurrentTask (task) {
@@ -549,6 +760,41 @@
         state.completedTasks.forEach(t => appendCompleted(t))
       }
 
+      function updateTodo (task) {
+        updateState({
+          todoTasks: state.todoTasks.map(t => t.id === task.id ? task : t)
+        })
+      }
+
+      function renderTaskFlags (task) {
+        const flagsList = $(`.task-item[data-id="${task.id}"] .flags`)
+        flagsList.innerHTML = ''
+        for (const flag of task.flags) {
+          flagsList.appendChild(
+            h('label', {
+              children: [
+                h('input', {
+                  actions: {
+                    input: event => {
+                      flag.checked = event.target.checked
+                      task.flags = task.flags.map(f => f.id === flag.id ? flag : f)
+                      updateTodo(task)
+                    }
+                  },
+                  attributes: {
+                    checked: flag.checked ? '' : undefined,
+                    type: 'checkbox'
+                  }
+                }),
+                h('span', {
+                  textContent: flag.name
+                })
+              ]
+            })
+          )
+        }
+      }
+
       function renderTodoList () {
         todoList.innerHTML = ''
         state.todoTasks.forEach(t => appendTodo(t))
@@ -570,7 +816,7 @@
           if (breaking && elapsedMs >= (breakMs - 250)) {
             breakContainer.classList.remove('-active')
             breaking = false
-            Array.from(document.querySelectorAll('button.-start'))
+            $$('button.start')
               .filter(b => b.nextSibling.value.length > 0)
               .forEach(b => enable(b))
           }
@@ -594,6 +840,11 @@
         })
       }
 
+      function toggle (button, okay) {
+        if (okay) return enable(button)
+        disable(button)
+      }
+
       function updateState (changes) {
         if (changes) state = { ...state, ...changes }
         window.localStorage.setItem('state', JSON.stringify(state))
@@ -605,21 +856,11 @@
           interruptedCount.textContent = state.currentTask.interruptions.toString()
           enable(finishTaskButton)
           enable(interruptedButton)
-          Array.from(document.querySelectorAll('button.-start'))
-            .forEach(b => disable(b))
+          $$('button.start').forEach(b => disable(b))
         }
 
-        if (state.todoTasks.length > 0) {
-          enable(clearTodosButton)
-        } else {
-          disable(clearTodosButton)
-        }
-
-        if (state.completedTasks.length > 0) {
-          enable(clearCompletedButton)
-        } else {
-          disable(clearCompletedButton)
-        }
+        toggle(clearTodosButton, state.todoTasks.length > 0)
+        toggle(clearCompletedButton, state.completedTasks.length > 0)
       }
 
       if (state.currentTask) {
