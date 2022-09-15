@@ -245,19 +245,20 @@
       }
 
       .task-item .flags {
-        align-items: flex-start;
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
         padding-left: calc(4rem + 64px);
+      }
+
+      .task-item .flags label {
+        margin-right: 1rem;
+        white-space: nowrap;
       }
 
       .task-flag {
         background-color: var(--nord5);
         display: flex;
         margin-bottom: 10px;
-      }
-
-      .task-flag input[type="text"] {
       }
 
       .tasks-list {
