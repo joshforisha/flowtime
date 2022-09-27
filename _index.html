@@ -48,7 +48,7 @@
         background-color: var(--nord0);
         color: var(--nord4);
         font-family: var(--sans-serif-fonts);
-        font-weight: 300;
+        font-weight: 400;
         margin: 0 auto;
         padding: 20px;
       }
@@ -63,11 +63,13 @@
         display: inline-flex;
         flex-shrink: 0;
         font-family: inherit;
-        font-size: 1em;
+        font-size: 1.25em;
         justify-content: center;
+        line-height: 1;
         min-height: 44px;
         min-width: 44px;
-        padding: 0 20px;
+        transition: all 100ms ease-out;
+        transition-property: background-color, color;
       }
 
       button:disabled {
@@ -75,223 +77,135 @@
         opacity: 0.25;
       }
 
-      button.-caution {
-        background-color: var(--nordD);
+      button[data-action="clear"] {
+        background-color: var(--nordC);
       }
 
-      button.-danger {
-        background-color: var(--nordB);
-        color: var(--nord6);
-      }
-
-      button.-good {
+      button[data-action="complete"] {
         background-color: var(--nordE);
-      }
-
-      button.-icon {
-        font-size: 1.5rem;
-        line-height: 1;
-        padding: 0;
-      }
-
-      button.-small {
-        font-size: 0.67em;
-      }
-
-      button.handle {
-        background-color: var(--nord3);
-        color: var(--nord4);
-        cursor: grab;
-      }
-
-      button[data-action="edit-flags"] {
-        background-color: var(--nord3);
-        color: var(--nord4);
-        margin-right: 5px;
-      }
-
-      button[data-action="start-task"] {
         margin-left: 5px;
       }
 
-      dialog {
-        align-items: center;
+      button[data-action="create"] {
+        background-color: var(--nord9);
+      }
+
+      button[data-action="delete"] {
+        background-color: var(--nordB);
+        color: var(--nord6);
+        margin-left: 10px;
+      }
+
+      button[data-action="move"] {
+        cursor: grab;
+        margin-right: 5px;
+      }
+
+      button[data-action="move"] {
         background-color: var(--nord6);
-        border-radius: 2px;
-        border-style: none;
-        flex-direction: column;
       }
 
-      dialog[open] {
-        display: flex;
-      }
-
-      dialog::backdrop {
-        backdrop-filter: blur(5px);
-      }
-
-      dialog > form {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
-
-      fieldset {
-        border-style: none;
-        margin: 0 0 30px;
-        padding: 0;
-      }
-
-      h1 {
-        margin: 0;
-      }
-
-      h2 {
-        align-items: center;
-        display: flex;
-        font-weight: 300;
-        margin: 0 0 20px;
-      }
-
-      h2 > span:first-child {
-        flex-grow: 1;
-      }
-
-      h2 > *:not(:last-child) {
-        margin-right: 10px;
-      }
-
-      input[type="checkbox"] {
-        appearance: none;
-        background-color: var(--nord0);
-        border-radius: 2px;
-        height: 1.25em;
-        padding: 0;
-        width: 1.25em;
-      }
-
-      input[type="checkbox"]:checked {
-        background-color: var(--nordE);
+      button[data-action="start"] {
+        background-color: var(--nordD);
+        margin-left: 5px;
       }
 
       input[type="text"] {
         background-color: transparent;
-        border-color: transparent;
-        border-radius: 5px;
-        border-style: solid;
+        border: none;
         color: inherit;
         font: inherit;
+        margin: 0 5px;
+        outline: none;
         padding: 0 5px;
+        transition: outline 100ms ease-out;
         width: 100%;
       }
 
-      input[type="text"]:focus-visible {
-        outline-color: var(--nord8);
-        outline-style: solid;
+      li {
+        background-color: var(--nord4);
+        border-radius: 5px;
+        color: var(--nord1);
+        display: flex;
+        margin: 1rem 0;
+        transition: all 100ms ease-out;
+        transition-property: background-color;
       }
 
-      label {
-        align-items: center;
-        cursor: pointer;
+      li button[data-action="complete"] {
+        display: none;
+      }
+
+      li.-active {
+        background-color: var(--nordD);
+      }
+
+      li.-active button[data-action="complete"] {
         display: flex;
       }
 
-      label input[type="checkbox"] {
-        margin-right: 5px;
+      li.-completed {
+        background-color: var(--nordE);
+        color: var(--nord1);
       }
 
-      label input[type="checkbox"]:not(:checked) ~ span {
-        color: var(--nord4);
-        opacity: 0.6;
+      li.-active button[data-action="start"],
+      li.-completed button[data-action="start"] {
+        display: none;
       }
 
-      label:hover input[type="checkbox"]:not(:checked) {
-        background-color: var(--nord2);
+      li button:first-child {
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
       }
 
-      label:hover input[type="checkbox"]:not(:checked) ~ span {
-        opacity: 0.8;
-      }
-
-      section {
-        background-color: var(--nord1);
-        border-radius: 5px;
-        display: block;
-        margin-top: 2.5rem;
-        padding: 10px;
+      li button:last-child {
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
       }
 
       ul {
         list-style-type: none;
-        margin: 0;
+        margin: 0 auto;
+        max-width: 36rem;
         padding-left: 0;
       }
 
-      .task-item {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .task-item .content {
-        border-top: 1px solid var(--nord2);
-        display: flex;
-        margin-top: 5px;
-        padding-top: 5px;
-      }
-
-      .task-item .content input[type="text"] {
-        margin: 0 5px;
-      }
-
-      .task-item .flags {
-        display: flex;
-        flex-wrap: wrap;
-        padding-left: calc(4rem + 64px);
-      }
-
-      .task-item .flags label {
-        margin-right: 1rem;
-        white-space: nowrap;
-      }
-
-      .task-flag {
-        background-color: var(--nord5);
-        display: flex;
-        margin-bottom: 10px;
-      }
-
-      .tasks-list {
-        background-color: var(--nord1);
+      li.-active .timer,
+      li.-completed .timer {
+        display: inline-flex;
       }
 
       .timer {
-        font-size: 0.8em;
-        margin-left: 10px;
-        opacity: 0.5;
+        align-items: center;
+        display: none;
+        flex-grow: 1;
+        justify-content: center;
+        padding: 0 5px;
       }
 
       .timer::after {
-        content: ")";
-        opacity: 0.5;
+        content: "m";
       }
 
-      .timer::before {
-        content: "(";
-        opacity: 0.5;
+      #Controls {
+        display: flex;
+        justify-content: center;
+      }
+
+      #Controls button {
+        margin: 0 10px;
       }
 
       #Break {
         align-items: center;
-        background-color: var(--nord0);
         display: flex;
         flex-direction: column;
-        height: 8rem;
         justify-content: center;
         left: 0;
         opacity: 0;
         pointer-events: none;
-        position: fixed;
+        position: relative;
         top: 0;
         transition: opacity 250ms ease-out;
         width: 100%;
@@ -318,47 +232,9 @@
         width: 90vw;
       }
 
-      #Controls {
-        align-items: center;
-        display: flex;
-        margin-top: 20px;
-      }
-
-      #Controls button {
-        margin-right: 20px;
-      }
-
-      #CurrentTask {
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 200ms ease-out;
-      }
-
-      #CurrentTask.-busy {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      #CurrentTask button {
-        margin-right: 10px;
-      }
-
-      #CurrentTask .name {
-        display: block;
-        font-size: 2rem;
-        line-height: 1;
-        margin-bottom: 20px;
-        min-height: 2rem;
-      }
-
-      #Interrupted {
-        width: 9rem;
-      }
-
-      #Interrupted .count {
-        font-size: 0.85em;
-        margin-left: 10px;
-        opacity: 0.5;
+      #BreakTime {
+        height: 3rem;
+        margin: 0;
       }
 
       @media screen and (min-width: 768px) {
@@ -392,539 +268,349 @@
     </style>
   </head>
   <body>
-    <div id="CurrentTask">
-      <span class="name"></span>
-      <button class="-good" disabled id="FinishTask">
-        Finish
-        <span class="timer"></span>
-      </button>
-      <button class="-caution" disabled id="Interrupted">
-        Interrupted
-        <span class="count">—</span>
-      </button>
-    </div>
-    <section id="TodoTasks">
-      <h2>
-        <span>Todo</span>
-        <button class="-small -good" id="AddTodo">Add Todo</button>
-        <button class="-small -danger" disabled id="ClearTodos">Clear</button>
-      </h2>
-      <ul class="tasks-list"></ul>
-    </section>
-    <section id="CompletedTasks">
-      <h2>
-        <span>Completed</span>
-        <button class="-small -danger" disabled id="ClearCompleted">Clear</button>
-      </h2>
-      <ul></ul>
-    </section>
     <div id="Break">
       <h1 id="BreakTime"></h1>
       <div id="BreakProgressBar">
         <div id="BreakProgress"></div>
       </div>
     </div>
+    <ul id="TaskList"></ul>
+    <div id="Controls">
+      <button data-action="create" title="Add task (shortcut: A)">&plus;</button>
+      <button data-action="clear" title="Clear tasks">&times;</button>
+    </div>
     <audio id="Chime">
       <source src="chime.wav" type="audio/wav" />
     </audio>
-    <dialog id="EditFlags">
-      <h2>FUN-2306-select-wallet</h2>
-      <form method="dialog">
-        <fieldset></fieldset>
-        <button type="submit">Close</button>
-      </form>
-    </dialog>
     <script>
       const emptyState = {
-        completedTasks: [],
-        currentTask: null,
-        todoTasks: []
+        activeTaskId: undefined,
+        startedTime: undefined,
+        tasks: []
+      };
+
+      if (window.localStorage.getItem('version') !== '3') {
+        window.localStorage.clear();
+        window.localStorage.setItem('version', '3');
+        window.localStorage.setItem('state', JSON.stringify(emptyState));
       }
 
-      const $ = (sel) => document.querySelector(sel)
-      const $$ = (sel) => Array.from(document.querySelectorAll(sel))
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-      const breakContainer = $('#Break')
-      const breakProgress = $('#BreakProgress')
-      const breakTime = $('#BreakTime')
-      const chimeAudio = $('#Chime')
-      const clearCompletedButton = $('#ClearCompleted')
-      const clearTodosButton = $('#ClearTodos')
-      const completedList = $('#CompletedTasks ul')
-      const currentTask = $('#CurrentTask')
-      const currentTaskName = $('#CurrentTask .name')
-      const currentTimer = $('#CurrentTask .timer')
-      const editFlagsDialog = $('#EditFlags')
-      const finishTaskButton = $('#FinishTask')
-      const interruptedButton = $('#Interrupted')
-      const interruptedCount = $('#Interrupted .count')
-      const todoList = $('#TodoTasks ul')
+      const breakContainer = $('#Break');
+      const breakProgress = $('#BreakProgress');
+      const breakTime = $('#BreakTime');
+      const chimeAudio = $('#Chime');
+      const taskList = $('#TaskList');
 
-      let breaking = false
-      let currentTimerInterval = null
-      let currentTimerTimeout = null
-      let draggingItem
-      let state = JSON.parse(window.localStorage.getItem('state')) || emptyState
+      let breaking = false;
+      let draggingItem;
+      let state = JSON.parse(window.localStorage.getItem('state')) || emptyState;
+      let timerInterval = null;
+      let timerTimeout = null;
 
-      function addTodo () {
+      function addTask() {
         const task = {
-          flags: [],
-          id: generateId(),
+          id: Date.now().toString(),
           name: ''
+        };
+        const taskItem = makeTaskItem(task);
+        taskList.appendChild(taskItem);
+        taskItem.querySelector('input').focus();
+        updateState({ tasks: state.tasks.concat(task) });
+      }
+
+      function breakMinutes(minutesSpent) {
+        if (minutesSpent <= 4) return 1;
+        if (minutesSpent <= 25) return 5;
+        if (minutesSpent <= 50) return 8;
+        if (minutesSpent <= 90) return 10;
+        return 15;
+      }
+
+      function disable(button) {
+        if (!button.hasAttribute('disabled')) {
+          button.setAttribute('disabled', '');
         }
-        appendTodo(task, true)
-        updateState({ todoTasks: state.todoTasks.concat(task) })
       }
 
-      function appendCompleted (task) {
-        const elapsedMinutes = Math.ceil((task.finished - task.started) / 60000)
-        const anyInterruptions = task.interruptions > 0
-          ? `, ${task.interruptions} interruption${task.interruptions === 1 ? '' : 's'}`
-          : ''
-
-        completedList.appendChild(h('li', {
-          textContent: task.name,
-          children: [
-            h('span', {
-              classes: ['timer'],
-              textContent: `${elapsedMinutes} min${anyInterruptions}`
-            })
-          ]
-        }))
+      function enable(button) {
+        if (button.hasAttribute('disabled')) {
+          button.removeAttribute('disabled');
+        }
       }
 
-      function appendTodo (task, focus = false) {
-        const item = h('li', {
-          classes: ['task-item'],
+      function enableTasks() {
+        for (const button of $$('li:not(.-active) button[data-action="start"]')) {
+          enable(button);
+        }
+      }
+
+      function findTaskIndex (item) {
+        for (let i in taskList.children) {
+          if (taskList.children.item(i) === item) return i;
+        }
+      }
+
+      function h(def, options = {}) {
+        if (Array.isArray(options)) options = { children: options };
+        const { actions, attributes, children, classes, textContent } = options;
+        const [type, ...inlineClasses] = def.split('.');
+        const element = document.createElement(type);
+        if (attributes) {
+          for (const [key, value] of Object.entries(attributes)) {
+            if (value !== undefined) element.setAttribute(key, value);
+          }
+        }
+        if (inlineClasses.length > 0) element.classList.add(...inlineClasses);
+        if (classes) element.classList.add(...classes.filter(c => c));
+        if (textContent) element.textContent = textContent;
+        if (children) {
+          for (const child of children) {
+            if (child) element.appendChild(child);
+          }
+        }
+        if (actions) {
+          for (const [eventType, handler] of Object.entries(actions)) {
+            element.addEventListener(eventType, event => handler(event, element));
+          }
+        }
+        return element;
+      }
+
+      function makeTaskItem(task) {
+        return h('li', {
+          actions: {
+            dragover: (event, item) => {
+              event.preventDefault();
+              if (item === draggingItem) return;
+              const src = findTaskIndex(draggingItem);
+              const dest = findTaskIndex(item);
+              if (dest < src) return taskList.insertBefore(draggingItem, item);
+              if (dest === taskList.children.length - 1) return todoList.appendChild(draggingItem);
+              taskList.insertBefore(draggingItem, taskList.children.item(dest + 1));
+            },
+            dragstart: (event, item) => {
+              draggingItem = item;
+            }
+          },
           attributes: {
             'data-id': task.id
           },
-          actions: {
-            dragend: event => {
-              const todoTasks = Array.from(todoList.children)
-                .map(item => state.todoTasks.find(t => t.id === item.getAttribute('data-id')))
-              updateState({ todoTasks })
-              draggingItem.removeAttribute('draggable')
-              draggingItem = undefined
-            },
-            dragstart: (event, item) => {
-              draggingItem = item
-            },
-            dragover: (event, item) => {
-              event.preventDefault()
-              if (item === draggingItem) return
-              const src = findTodoIndex(draggingItem)
-              const dest = findTodoIndex(item)
-              if (dest < src) return todoList.insertBefore(draggingItem, item)
-              if (dest === todoList.children.length - 1) return todoList.appendChild(draggingItem)
-              todoList.insertBefore(draggingItem, todoList.children.item(dest + 1))
-            }
-          },
           children: [
-            h('div', {
-              classes: ['content'],
-              children: [
-                h('button', {
-                  textContent: '≡',
-                  classes: ['handle'],
-                  actions: {
-                    mousedown: event => {
-                      event.target.parentNode.parentNode.setAttribute('draggable', 'true')
-                    }
-                  }
-                }),
-                h('button', {
-                  textContent: 'Start',
-                  attributes: {
-                    'data-action': 'start-task',
-                    disabled: task.name.length === 0 ? '' : undefined
-                  },
-                  actions: {
-                    click: event => {
-                      todoList.removeChild(event.target.closest('li'))
-                      updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
-                      startTask(task)
-                    }
-                  }
-                }),
-                h('input', {
-                  attributes: {
-                    'aria-label': 'task name',
-                    type: 'text',
-                    value: task.name
-                  },
-                  actions: {
-                    keydown: event => {
-                      if (event.key === 'Enter') event.target.blur()
-                    },
-                    input: event => {
-                      task.name = event.target.value
-                      const startButton = event.target.closest('li').querySelector('button[data-action="start-task"]')
-                      toggle(startButton, event.target.value.length > 0 && state.currentTask === null && !breaking)
-                      updateTodo(task)
-                    }
-                  }
-                }),
-                h('button', {
-                  textContent: '⋮',
-                  attributes: {
-                    'data-action': 'edit-flags'
-                  },
-                  actions: {
-                    click: () => {
-                      editFlags(task)
-                    }
-                  }
-                }),
-                h('button', {
-                  classes: ['-danger', '-icon'],
-                  textContent: '×',
-                  actions: {
-                    click: event => {
-                      if (window.confirm('Are you sure?')) {
-                        todoList.removeChild(event.target.closest('li'))
-                        updateState({ todoTasks: state.todoTasks.filter(t => t.id !== task.id) })
-                      }
-                    }
-                  }
-                })
-              ]
-            }),
-            h('div', {
-              classes: ['flags']
-            })
-          ]
-        })
-
-        todoList.appendChild(item)
-        renderTaskFlags(task)
-
-        if (focus) setTimeout(() => item.querySelector('input').focus(), 5)
-      }
-
-      function breakMinutes (minutesSpent) {
-        if (minutesSpent <= 4) return 1
-        if (minutesSpent <= 25) return 5
-        if (minutesSpent <= 50) return 8
-        if (minutesSpent <= 90) return 10
-        return 15
-      }
-
-      function disable (button) {
-        if (!button.hasAttribute('disabled')) {
-          button.setAttribute('disabled', '')
-        }
-      }
-
-      function editFlags (task) {
-        $('#EditFlags h2').textContent = task.name
-        const fieldset = $('#EditFlags fieldset')
-        fieldset.innerHTML = ''
-
-        const flagsList = h('ul', {
-          classes: ['flags-list']
-        })
-
-        for (const flag of task.flags) {
-          flagsList.appendChild(makeTaskFlag(task, flag))
-        }
-        fieldset.appendChild(flagsList)
-
-        const addButton = h('button', {
-          actions: {
-            click: () => {
-              const flag = {
-                checked: false,
-                id: generateId(),
-                name: ''
-              }
-              task.flags = task.flags.concat(flag)
-              updateTodo(task)
-              const flagEl = makeTaskFlag(task, flag)
-              flagsList.appendChild(flagEl)
-              flagEl.querySelector('input').focus()
-              renderTaskFlags(task)
-            }
-          },
-          attributes: {
-            type: 'button'
-          },
-          classes: ['-good'],
-          textContent: 'Add'
-        })
-        fieldset.appendChild(addButton)
-
-        editFlagsDialog.showModal()
-      }
-
-      function enable (button) {
-        if (button.hasAttribute('disabled')) {
-          button.removeAttribute('disabled')
-        }
-      }
-
-      function findTodoIndex (item) {
-        for (let i in todoList.children) {
-          if (todoList.children.item(i) === item) return i
-        }
-      }
-
-      function generateId () {
-        return Date.now().toString()
-      }
-
-      function h (type, { actions, attributes, children, classes, textContent } = {}) {
-        const element = document.createElement(type)
-        if (attributes) {
-          Object.entries(attributes).forEach(([key, value]) => {
-            if (value !== undefined) element.setAttribute(key, value)
-          })
-        }
-        if (classes) element.classList.add(...classes)
-        if (textContent) element.textContent = textContent
-        if (children) {
-          children.forEach(child => {
-            if (child) element.appendChild(child)
-          })
-        }
-        if (actions) {
-          Object.entries(actions).forEach(([eventType, handler]) => {
-            element.addEventListener(eventType, event => handler(event, element))
-          })
-        }
-        return element
-      }
-
-      function makeTaskFlag (task, flag) {
-        return h('li', {
-          classes: ['task-flag'],
-          children: [
-            h('input', {
-              attributes: {
-                'aria-label': 'flag name',
-                type: 'text',
-                value: flag.name
-              },
+            h('button', {
               actions: {
-                input: event => {
-                  flag.name = event.target.value
-                  task.flags = task.flags.map(f => f.id === flag.id ? flag : f)
-                  updateTodo(task)
-                  renderTaskFlags(task)
+                mousedown: (event) => {
+                  event.target.parentNode.setAttribute('draggable', 'true');
                 }
+              },
+              attributes: {
+                'data-action': 'move',
+                title: 'Move'
+              },
+              textContent: '≡'
+            }),
+            h('input', {
+              actions: {
+                input: (event) => {
+                  updateTask({ ...task, name: event.target.value });
+                },
+                keydown: (event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    return event.target.blur();
+                  }
+                }
+              },
+              attributes: {
+                disabled: typeof task.duration !== 'undefined' ? '' : undefined,
+                type: 'text',
+                value: task.name
               }
+            }),
+            h('span.timer', {
+              textContent: task.duration
             }),
             h('button', {
               actions: {
-                click: () => {
-                  if (window.confirm('Are you sure?')) {
-                    $('#EditFlags ul').removeChild(event.target.closest('li'))
-                    task.flags = task.flags.filter(f => f.id !== flag.id)
-                    updateTodo(task)
-                    renderTaskFlags(task)
+                click: (event) => {
+                  if (state.activeTaskId !== undefined) return;
+                  for (const button of $$('button[data-action="start"]')) {
+                    disable(button);
+                  }
+                  event.target.parentNode.classList.add('-active');
+                  updateState({
+                    activeTaskId: task.id,
+                    startedTime: Date.now()
+                  });
+                  startCounting();
+                }
+              },
+              attributes: {
+                'data-action': 'start',
+                disabled: (state.activeTaskId && state.activeTaskId !== task.id || breaking) ? '' : undefined,
+                title: 'Start'
+              },
+              textContent: 'ᐅ'
+            }),
+            h('button', {
+              actions: {
+                click: (event) => {
+                  stopCounting();
+                  event.target.parentNode.classList.add('-completed');
+                  event.target.parentNode.classList.remove('-active');
+                  const duration = Math.max(1, Math.ceil((Date.now() - state.startedTime) / 60000));
+                  updateState({
+                    activeTaskId: undefined,
+                    startedTime: undefined,
+                    tasks: state.tasks.map(t => t.id === task.id ? { ...task, duration } : t)
+                  });
+                  startBreak(duration);
+                }
+              },
+              attributes: {
+                'data-action': 'complete',
+                title: 'Complete'
+              },
+              textContent: '✓'
+            }),
+            h('button', {
+              actions: {
+                click: (event) => {
+                  if (confirm('Are you sure?')) {
+                    stopCounting();
+                    const newState = {
+                      tasks: state.tasks.filter(t => t.id !== task.id)
+                    };
+                    if (state.activeTaskId === task.id) {
+                      newState.activeTaskId = null;
+                      newState.startTime = null;
+                      enableTasks();
+                    }
+                    taskList.removeChild(event.target.parentNode);
+                    updateState(newState);
                   }
                 }
               },
               attributes: {
-                type: 'button'
+                'data-action': 'delete',
+                title: 'Delete'
               },
-              classes: ['-danger', '-icon'],
               textContent: '×'
             })
+          ],
+          classes: [
+            state.activeTaskId === task.id ? '-active' : null,
+            typeof task.duration !== 'undefined' ? '-completed' : null
           ]
-        })
+        });
       }
 
-      function populateCurrentTask (task) {
-        currentTaskName.textContent = task.name
+      function startCounting() {
+        const taskItem = $('li.-active');
+        const timer = taskItem.querySelector('.timer');
         const updateCount = () => {
-          const elapsed = Math.ceil((Date.now() - task.started) / 60000)
-          currentTimer.textContent = `${Math.max(1, elapsed)} min`
-        }
-        updateCount()
-        const currentMs = Date.now() % 60000
-        const taskOffset = task.started % 60000
+          const elapsed = Math.ceil((Date.now() - state.startedTime) / 60000);
+          timer.textContent = Math.max(1, elapsed).toString();
+        };
+        updateCount();
+        const currentMs = Date.now() % 60000;
+        const taskOffset = state.startedTime % 60000;
         const delay = currentMs > taskOffset
           ? 60000 + taskOffset - currentMs
-          : taskOffset - currentMs
-        currentTimerTimeout = setTimeout(() => {
-          updateCount()
-          currentTimerTimeout = null
-          currentTimerInterval = setInterval(updateCount, 60000)
-        }, delay)
-        interruptedCount.textContent = '0'
-        currentTask.classList.add('-busy')
+          : taskOffset - currentMs;
+        timerTimeout = setTimeout(() => {
+          updateCount();
+          timerTimeout = null;
+          timerInterval = setInterval(updateCount, 60000);
+        }, delay);
       }
 
-      function renderCompletedList () {
-        completedList.innerHTML = ''
-        state.completedTasks.forEach(t => appendCompleted(t))
-      }
-
-      function updateTodo (task) {
-        updateState({
-          todoTasks: state.todoTasks.map(t => t.id === task.id ? task : t)
-        })
-      }
-
-      function renderTaskFlags (task) {
-        const flagsList = $(`.task-item[data-id="${task.id}"] .flags`)
-        flagsList.innerHTML = ''
-        for (const flag of task.flags) {
-          flagsList.appendChild(
-            h('label', {
-              children: [
-                h('input', {
-                  actions: {
-                    input: event => {
-                      flag.checked = event.target.checked
-                      task.flags = task.flags.map(f => f.id === flag.id ? flag : f)
-                      updateTodo(task)
-                    }
-                  },
-                  attributes: {
-                    checked: flag.checked ? '' : undefined,
-                    type: 'checkbox'
-                  }
-                }),
-                h('span', {
-                  textContent: flag.name
-                })
-              ]
-            })
-          )
-        }
-      }
-
-      function renderTodoList () {
-        todoList.innerHTML = ''
-        state.todoTasks.forEach(t => appendTodo(t))
-      }
-
-      function startBreak (minutesSpent) {
-        breaking = true
-        const breakMs = breakMinutes(minutesSpent) * 60000
-        const start = Date.now()
-        let remainingSeconds = Math.ceil(breakMs / 1000)
-        breakTime.textContent = remainingSeconds
-        breakProgress.style.width = '0%'
-        breakContainer.classList.add('-active')
+      function startBreak(minutesSpent) {
+        breaking = true;
+        const breakMs = breakMinutes(minutesSpent) * 60000;
+        const start = Date.now();
+        let remainingSeconds = Math.ceil(breakMs / 1000);
+        breakTime.textContent = remainingSeconds;
+        breakProgress.style.width = '0%';
+        breakContainer.classList.add('-active');
         const countdown = setInterval(() => {
-          const elapsedMs = Date.now() - start
-          remainingSeconds = Math.ceil((breakMs - elapsedMs) / 1000)
-          breakTime.textContent = remainingSeconds
-          breakProgress.style.width = `${100 * elapsedMs / breakMs}%`
+          const elapsedMs = Date.now() - start;
+          remainingSeconds = Math.ceil((breakMs - elapsedMs) / 1000);
+          breakTime.textContent = remainingSeconds;
+          breakProgress.style.width = `${100 * elapsedMs / breakMs}%`;
           if (breaking && elapsedMs >= (breakMs - 250)) {
-            breakContainer.classList.remove('-active')
-            breaking = false
-            $$('button.start')
-              .filter(b => b.nextSibling.value.length > 0)
-              .forEach(b => enable(b))
+            breakContainer.classList.remove('-active');
+            breaking = false;
+            for (const button of $$('button[data-action="start"]')) {
+              enable(button);
+            }
           }
           if (elapsedMs >= breakMs) {
-            chimeAudio.play()
-            clearInterval(countdown)
+            chimeAudio.play();
+            clearInterval(countdown);
           }
-        }, 250)
+        }, 250);
       }
 
-      function startTask (todo) {
-        const currentTask = {
-          ...todo,
-          interruptions: 0,
-          started: Date.now()
+      function stopCounting() {
+        if (timerTimeout) {
+          clearTimeout(timerTimeout);
+          timerTimeout = undefined;
         }
-        populateCurrentTask(currentTask)
-        updateState({
-          currentTask,
-          todoTasks: state.todoTasks.filter(t => t.id !== todo.id)
-        })
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = undefined;
+        }
       }
 
-      function toggle (button, okay) {
-        if (okay) return enable(button)
-        disable(button)
-      }
-
-      function updateState (changes) {
-        if (changes) state = { ...state, ...changes }
+      function updateState(changes) {
+        if (changes) state = { ...state, ...changes };
         window.localStorage.setItem('state', JSON.stringify(state))
-
-        if (state.currentTask === null) {
-          disable(finishTaskButton)
-          disable(interruptedButton)
-        } else {
-          interruptedCount.textContent = state.currentTask.interruptions.toString()
-          enable(finishTaskButton)
-          enable(interruptedButton)
-          $$('button.start').forEach(b => disable(b))
-        }
-
-        toggle(clearTodosButton, state.todoTasks.length > 0)
-        toggle(clearCompletedButton, state.completedTasks.length > 0)
       }
 
-      if (state.currentTask) {
-        populateCurrentTask(state.currentTask)
+      function updateTask(task) {
+        updateState({
+          tasks: state.tasks.map(t => t.id === task.id ? task : t)
+        });
       }
 
-      renderTodoList()
-      renderCompletedList()
-
-      finishTaskButton.addEventListener('click', () => {
-        const task = { ...state.currentTask, finished: Date.now() }
-        appendCompleted(task)
-        currentTask.classList.remove('-busy')
-        interruptedCount.textContent = '—'
-        breakContainer.classList.add('-active')
-        if (currentTimerTimeout) {
-          clearTimeout(currentTimerTimeout)
-          currentTimerTimeout = null
-        }
-        if (currentTimerInterval) {
-          clearInterval(currentTimerInterval)
-          currentTimerInterval = null
-        }
-        setTimeout(() => {
-          currentTaskName.textContent = ''
-        }, 200)
-        startBreak(Math.ceil((task.finished - task.started) / 60000))
+      window.addEventListener('dragend', () => {
         updateState({
-          completedTasks: state.completedTasks.concat(task),
-          currentTask: null
-        })
-      })
+          tasks: Array.from(taskList.children).map((item) =>
+            state.tasks.find(t => t.id === item.getAttribute('data-id'))
+          )
+        });
+        draggingItem.removeAttribute('draggable');
+        draggingItem = undefined;
+      });
 
-      interruptedButton.addEventListener('click', () => {
-        updateState({
-          currentTask: {
-            ...state.currentTask,
-            interruptions: state.currentTask.interruptions + 1
-          }
-        })
-      })
-
-      document.getElementById('AddTodo').addEventListener('click', addTodo)
-
-      clearCompletedButton.addEventListener('click', () => {
-        if (window.confirm('Are you sure?')) {
-          completedList.innerHTML = ''
-          updateState({ completedTasks: [] })
+      window.addEventListener('keydown', (event) => {
+        if (event.target === document.body && event.key === 'a') {
+          event.preventDefault();
+          addTask();
         }
-      })
+      });
 
-      clearTodosButton.addEventListener('click', () => {
-        if (window.confirm('Are you sure?')) {
-          todoList.innerHTML = ''
-          updateState({ todoTasks: [] })
+      $('button[data-action="clear"]').addEventListener('click', () => {
+        if (confirm('Clear all tasks?')) {
+          taskList.innerHTML = '';
+          updateState(emptyState);
         }
-      })
+      });
 
-      updateState()
+      $('button[data-action="create"]').addEventListener('click', () => {
+        addTask();
+      });
 
-      window.addEventListener('keydown', event => {
-        if (event.target === document.body && event.key === 'a') addTodo()
-      })
+      for (const task of state.tasks) {
+        taskList.appendChild(makeTaskItem(task));
+      }
+
+      if (state.activeTaskId) {
+        startCounting();
+      }
     </script>
   </body>
 </html>
