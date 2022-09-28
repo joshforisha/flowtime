@@ -56,20 +56,21 @@
       button {
         align-items: center;
         background-color: var(--nord4);
-        border-radius: 2px;
+        border-radius: 50%;
         border-width: 0;
-        color: var(--nord0);
+        color: var(--nord2);
         cursor: pointer;
         display: inline-flex;
         flex-shrink: 0;
         font-family: inherit;
         font-size: 1.25em;
+        font-weight: 500;
         justify-content: center;
         line-height: 1;
-        min-height: 44px;
-        min-width: 44px;
+        min-height: 52px;
+        min-width: 52px;
         transition: all 100ms ease-out;
-        transition-property: background-color, color;
+        transition-property: background-color, color, opacity;
       }
 
       button:disabled {
@@ -83,7 +84,6 @@
 
       button[data-action="complete"] {
         background-color: var(--nordE);
-        margin-left: 5px;
       }
 
       button[data-action="create"] {
@@ -92,13 +92,12 @@
 
       button[data-action="delete"] {
         background-color: var(--nordB);
-        color: var(--nord6);
-        margin-left: 10px;
+        color: var(--nord4);
       }
 
       button[data-action="move"] {
         cursor: grab;
-        margin-right: 5px;
+        margin: 0 10px;
       }
 
       button[data-action="move"] {
@@ -107,46 +106,46 @@
 
       button[data-action="start"] {
         background-color: var(--nordD);
-        margin-left: 5px;
+      }
+
+      button[data-action="start"]:disabled {
+        opacity: 0;
+        pointer-events: none;
       }
 
       input[type="text"] {
         background-color: transparent;
         border: none;
+        border-radius: 2px;
         color: inherit;
         font: inherit;
-        margin: 0 5px;
-        outline: none;
+        margin-left: 10px;
+        outline: 1px solid var(--nord9);
         padding: 0 5px;
         transition: outline 100ms ease-out;
         width: 100%;
       }
 
+      input[type="text"]:focus {
+        outline-color: var(--nord8);
+      }
+
       li {
-        background-color: var(--nord4);
         border-radius: 5px;
-        color: var(--nord1);
         display: flex;
         margin: 1rem 0;
-        transition: all 100ms ease-out;
-        transition-property: background-color;
+      }
+
+      li.-completed input[type="text"] {
+        color: var(--nord3);
       }
 
       li button[data-action="complete"] {
         display: none;
       }
 
-      li.-active {
-        background-color: var(--nordD);
-      }
-
       li.-active button[data-action="complete"] {
         display: flex;
-      }
-
-      li.-completed {
-        background-color: var(--nordE);
-        color: var(--nord1);
       }
 
       li.-active button[data-action="start"],
@@ -154,34 +153,41 @@
         display: none;
       }
 
-      li button:first-child {
-        border-bottom-left-radius: 5px;
-        border-top-left-radius: 5px;
+      li.-active input[type="text"] {
+        color: var(--nordD);
       }
 
-      li button:last-child {
-        border-bottom-right-radius: 5px;
-        border-top-right-radius: 5px;
+      li.-active .timer {
+        color: var(--nordD);
+        opacity: 0.75;
+      }
+
+      li.-completed button[data-action="complete"] {
+        display: flex;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      li.-completed .timer {
+        color: inherit;
+        opacity: 0.25;
       }
 
       ul {
         list-style-type: none;
         margin: 0 auto;
-        max-width: 36rem;
+        max-width: 30rem;
         padding-left: 0;
-      }
-
-      li.-active .timer,
-      li.-completed .timer {
-        display: inline-flex;
       }
 
       .timer {
         align-items: center;
-        display: none;
-        flex-grow: 1;
-        justify-content: center;
-        padding: 0 5px;
+        display: inline-flex;
+        justify-content: flex-start;
+        opacity: 0;
+        padding: 0 10px;
+        transition: opacity 100ms ease-out;
+        width: 4rem;
       }
 
       .timer::after {
@@ -191,7 +197,7 @@
       #Controls {
         display: flex;
         justify-content: center;
-        margin: 5rem 0 4rem;
+        margin: 4rem 0 2rem;
       }
 
       #Controls button {
@@ -262,8 +268,26 @@
           transition: opacity 100ms ease-out;
         }
 
+        button[data-action="delete"],
+        button[data-action="move"] {
+          opacity: 0;
+        }
+
         button:not(:disabled):hover {
-          opacity: 1;
+          opacity: 1 !important;
+        }
+
+        input[type="text"] {
+          outline-color: transparent;
+        }
+
+        input[type="text"]:not(:disabled):not(:focus):hover {
+          outline-color: var(--nord9);
+        }
+
+        li:hover button[data-action="delete"],
+        li:hover button[data-action="move"] {
+          opacity: 0.9;
         }
       }
     </style>
@@ -402,39 +426,6 @@
           children: [
             h('button', {
               actions: {
-                mousedown: (event) => {
-                  event.target.parentNode.setAttribute('draggable', 'true');
-                }
-              },
-              attributes: {
-                'data-action': 'move',
-                title: 'Move'
-              },
-              textContent: '≡'
-            }),
-            h('input', {
-              actions: {
-                input: (event) => {
-                  updateTask({ ...task, name: event.target.value });
-                },
-                keydown: (event) => {
-                  if (event.key === 'Enter') {
-                    event.preventDefault();
-                    return event.target.blur();
-                  }
-                }
-              },
-              attributes: {
-                disabled: typeof task.duration !== 'undefined' ? '' : undefined,
-                type: 'text',
-                value: task.name
-              }
-            }),
-            h('span.timer', {
-              textContent: task.duration
-            }),
-            h('button', {
-              actions: {
                 click: (event) => {
                   if (state.activeTaskId !== undefined) return;
                   for (const button of $$('button[data-action="start"]')) {
@@ -475,6 +466,39 @@
                 title: 'Complete'
               },
               textContent: '✓'
+            }),
+            h('span.timer', {
+              textContent: task.duration
+            }),
+            h('input', {
+              actions: {
+                input: (event) => {
+                  updateTask({ ...task, name: event.target.value });
+                },
+                keydown: (event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    return event.target.blur();
+                  }
+                }
+              },
+              attributes: {
+                disabled: typeof task.duration !== 'undefined' ? '' : undefined,
+                type: 'text',
+                value: task.name
+              }
+            }),
+            h('button', {
+              actions: {
+                mousedown: (event) => {
+                  event.target.parentNode.setAttribute('draggable', 'true');
+                }
+              },
+              attributes: {
+                'data-action': 'move',
+                title: 'Move'
+              },
+              textContent: '≡'
             }),
             h('button', {
               actions: {
