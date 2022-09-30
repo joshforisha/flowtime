@@ -456,7 +456,7 @@
                   updateState({
                     activeTaskId: undefined,
                     startedTime: undefined,
-                    tasks: state.tasks.map(t => t.id === task.id ? { ...task, duration } : t)
+                    tasks: state.tasks.map(t => t.id === task.id ? { ...t, duration } : t)
                   });
                   startBreak(duration);
                 }
