@@ -509,8 +509,8 @@
                       tasks: state.tasks.filter(t => t.id !== task.id)
                     };
                     if (state.activeTaskId === task.id) {
-                      newState.activeTaskId = null;
-                      newState.startedTime = null;
+                      newState.activeTaskId = undefined;
+                      newState.startedTime = undefined;
                       enableTasks();
                     }
                     taskList.removeChild(event.target.parentNode);
@@ -591,12 +591,7 @@
       }
 
       function updateState(changes) {
-        if (changes) {
-          state = { ...state, ...changes };
-          for (const [key, value] of state) {
-            if (value === null) deletestate[key];
-          }
-        }
+        if (changes) state = { ...state, ...changes };
         window.localStorage.setItem('state', JSON.stringify(state))
       }
 
