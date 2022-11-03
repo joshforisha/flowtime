@@ -468,7 +468,6 @@
             if (Number.isInteger(task.completed)) {
               item.querySelector('.timer').textContent = elapsedMinutes(task).toString();
             } else {
-              console.log('Counting!', task);
               startCounting(task);
             }
           }
@@ -598,7 +597,7 @@
           case 'delete':
             return promptRemoveTask(event.target.parentElement.getAttribute('data-id'));
           case 'move':
-            return;
+            return; // Don't do anything for full click event of the move button
           case 'start':
             return startTask(event.target.parentElement);
           default:
