@@ -339,6 +339,7 @@
       const chime = $('audio');
       const progressBar = $('progress');
       const tasksList = $('ul');
+      const minute = 60_000;
 
       let breaking = false;
       let draggingItem;
@@ -388,7 +389,8 @@
       }
 
       function completeTask(taskId) {
-        clearTimeout(timerTimeout);
+        if (timerTimeout) clearTimeout(timerTimeout);
+        if (timerInterval) clearInterval(timerInterval);
         const task = getTask(taskId);
         task.completed = Date.now();
         const minutes = breakMinutes(elapsedMinutes(task));
@@ -478,9 +480,9 @@
         window.localStorage.setItem('tasks', JSON.stringify(tasks));
       }
 
-      function startBreak(minutes) {
+      function startBreak(numMinutes) {
         breaking = true;
-        const total = minutes * 60000;
+        const total = numMinutes * minute;
         let start;
         let elapsed = 0;
         progressBar.setAttribute('max', total);
@@ -504,19 +506,19 @@
         const taskItem = $(`li[data-id="${task.id}"]`);
         const timer = taskItem.querySelector('.timer');
         const updateCount = () => {
-          const elapsed = Math.ceil((Date.now() - task.started) / 60000);
+          const elapsed = Math.ceil((Date.now() - task.started) / minute);
           timer.textContent = Math.max(1, elapsed).toString();
         };
         updateCount();
-        const currentMs = Date.now() % 60000;
-        const taskOffset = task.started % 60000;
+        const currentMs = Date.now() % minute;
+        const taskOffset = task.started % minute;
         const delay = currentMs > taskOffset
-          ? 60000 + taskOffset - currentMs
+          ? minute + taskOffset - currentMs
           : taskOffset - currentMs;
         timerTimeout = setTimeout(() => {
           updateCount();
           timerTimeout = null;
-          timerInterval = setInterval(updateCount, 60000);
+          timerInterval = setInterval(updateCount, minute);
         }, delay);
       }
 
