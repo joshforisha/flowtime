@@ -633,6 +633,21 @@
         updateTask({ ...getTask(taskId), name: event.target.value });
       });
 
+      window.addEventListener('keyup', (event) => {
+        if (event.target === document.body) {
+          event.stopPropagation();
+          switch (event.key) {
+            case 'a':
+              return addTask();
+          }
+        } else {
+          switch (event.key) {
+            case 'Enter':
+              return event.target.blur();
+          }
+        }
+      });
+
       window.addEventListener('mousedown', (event) => {
         if (event.target.getAttribute('data-action') !== 'move') return;
         startMoving(event.target.parentElement);
