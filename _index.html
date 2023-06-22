@@ -345,6 +345,7 @@
       let draggingItem;
       let tasks = JSON.parse(window.localStorage.getItem('tasks')) || [];
       let timerTimeout;
+      let timerInterval;
 
       function createTask() {
         return {
