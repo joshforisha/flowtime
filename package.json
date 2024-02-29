@@ -1,9 +1,8 @@
 {
   "private": true,
-  "scripts": {
-    "build": "html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-tag-whitespace --minify-css true --minify-js true _index.html > index.html"
-  },
-  "devDependencies": {
-    "html-minifier": "4.0.0"
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none"
   }
 }

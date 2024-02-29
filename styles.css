@@ -1,0 +1,331 @@
+:root {
+  font-size: clamp(14px, 2vw, 20px);
+  line-height: 1.5;
+
+  /* Nord Colors */
+  --nord0: #2e3440;
+  --nord1: #3b4252;
+  --nord2: #434c5e;
+  --nord3: #4c566a;
+  --nord4: #d8dee9;
+  --nord5: #e5e9f0;
+  --nord6: #eceff4;
+  --nord7: #8fbcbb;
+  --nord8: #88c0d0;
+  --nord9: #81a1c1;
+  --nordA: #5e81ac;
+  --nordB: #bf616a;
+  --nordC: #d08770;
+  --nordD: #ebcb8b;
+  --nordE: #a3be8c;
+  --nordF: #b48ead;
+
+  /* Faded Colors */
+  --dark-20: #2e344033;
+  --dark-50: #2e344080;
+  --dark-80: #2e3440cd;
+  --light-20: #eceff433;
+  --light-50: #eceff480;
+  --light-80: #eceff4cd;
+
+  /* Fonts */
+  --sans-serif-fonts: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+
+  /* Sizes */
+  --circle: 50%;
+  --control-height: 48px;
+  --huge: 4rem;
+  --large: 2rem;
+  --medium: 1rem;
+  --small: 0.5rem;
+  --tiny: 0.25rem;
+
+  /* Speeds */
+  --fast: 50ms;
+  --slow: 150ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@keyframes blink {
+  0% { opacity: 0.9 }
+  70% { opacity: 0.9 }
+  80% { opacity: 1 }
+  100% { opacity: 0.9 }
+}
+
+body {
+  background-color: var(--nord0);
+  color: var(--nord4);
+  font-family: var(--sans-serif-fonts);
+  font-weight: 400;
+  margin: 0;
+
+  & > svg {
+    display: none;
+  }
+}
+
+button {
+  align-items: center;
+  background-color: var(--nord4);
+  border-radius: var(--small);
+  border-width: 0;
+  color: var(--nord2);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-family: inherit;
+  font-size: 1em;
+  font-weight: 500;
+  justify-content: center;
+  line-height: 1;
+  min-height: var(--control-height);
+  min-width: var(--control-height);
+  transition: all var(--fast) ease-out;
+  transition-property: background-color, color;
+
+  &:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &[data-action="clear"] {
+    background-color: var(--nordC);
+  }
+
+  &[data-action="complete"] {
+    animation: 1s blink infinite;
+    background-color: var(--nordD);
+    position: relative;
+
+    &:disabled {
+      animation: none;
+      background-color: var(--nord4);
+      opacity: 1;
+    }
+
+    span {
+      font-size: 0.8em;
+      pointer-events: none;
+      transition: opacity var(--fast) ease-out;
+    }
+
+    svg {
+      left: 1em;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      transition: opacity var(--fast) ease-out;
+    }
+  }
+
+  &[data-action="create"] {
+    background-color: var(--nord8);
+  }
+
+  &[data-action="delete"] {
+    background-color: var(--nordB);
+    color: var(--nord4);
+  }
+
+  &[data-action="move"] {
+    background-color: var(--nord6);
+    border-radius: var(--tiny) 0 0 var(--tiny);
+    cursor: grab;
+    height: calc(var(--control-height) + var(--medium));
+    margin-right: var(--small);
+    min-width: unset;
+    width: var(--large);
+  }
+
+  &[data-action="start"] {
+    background-color: var(--nordD);
+  }
+
+  svg {
+    fill: currentcolor;
+    height: 1.25em;
+    max-width: 1.25em;
+  }
+}
+
+footer {
+  background-color: var(--nord1);
+  bottom: 0;
+  display: flex;
+  gap: var(--medium);
+  justify-content: center;
+  left: 0;
+  padding: var(--small);
+  position: fixed;
+  width: 100%;
+
+  button {
+    padding: 0 var(--medium);
+  }
+}
+
+input[type="text"] {
+  background-color: var(--nord0);
+  border: 1px solid var(--nord2);
+  border-radius: var(--tiny);
+  color: inherit;
+  font: inherit;
+  font-size: 1.25em;
+  outline: none;
+  padding: var(--small);
+  transition: border-color var(--fast) ease-out;
+  height: var(--control-height);
+  width: 100%;
+
+  &:hover {
+    border-color: var(--nordA);
+  }
+
+  &:focus {
+    border-color: var(--nord4);
+  }
+}
+
+li {
+  align-items: center;
+  background-color: var(--nord1);
+  border-radius: var(--tiny);
+  display: flex;
+  padding-right: var(--small);
+  white-space: nowrap;
+
+  &:not(:first-child) {
+    margin-top: var(--medium);
+  }
+
+  button[data-action="complete"] {
+    display: none;
+  }
+
+  input {
+    margin: 0 var(--small);
+  }
+
+  &.-active input {
+    color: var(--nordD);
+  }
+
+  &.-active button[data-action="complete"],
+  &.-done button[data-action="complete"] {
+    display: block;
+  }
+
+  &.-active button[data-action="start"],
+  &.-done button[data-action="start"] {
+    display: none;
+  }
+
+  &.-done {
+    color: var(--nord3);
+
+    button[data-action="complete"] {
+      background-color: var(--nordF);
+    }
+  }
+}
+
+progress {
+  appearance: none;
+  border: none;
+  height: 0.5rem;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: opacity 100ms ease-out;
+  width: 100%;
+
+  &[value] {
+    opacity: 1;
+  }
+
+  &::-webkit-progress-bar {
+    background-color: var(--nord2);
+  }
+
+  &::-webkit-progress-value {
+    background-color: var(--nord4);
+  }
+}
+
+ul {
+  list-style-type: none;
+  margin: var(--large) var(--medium) var(--huge);
+  padding: 0;
+}
+
+@media (hover: hover) {
+  button {
+    &[data-action="clear"] {
+      background-color: var(--nord3);
+      color: var(--nordC);
+
+      &:hover {
+        background-color: var(--nordC);
+        color: var(--nord0);
+      }
+    }
+
+    &[data-action="create"] {
+      background-color: var(--nord3);
+      color: var(--nord8);
+
+      &:hover {
+        background-color: var(--nord8);
+        color: var(--nord0);
+      }
+    }
+
+    &[data-action="delete"] {
+      background-color: var(--nord3);
+      color: var(--nordB);
+
+      &:hover {
+        background-color: var(--nordB);
+        color: var(--nord6);
+      }
+    }
+
+    &[data-action="move"] {
+      background-color: var(--nord3);
+      color: var(--nord6);
+
+      &:hover {
+        background-color: var(--nord4);
+        color: var(--nord3);
+      }
+    }
+
+    &[data-action="start"] {
+      background-color: var(--nord3);
+      color: var(--nordD);
+
+      &:hover {
+        background-color: var(--nordD);
+        color: var(--nord3);
+      }
+    }
+  }
+
+  li.-active button[data-action="complete"]:hover {
+    background-color: var(--nordE);
+
+    span {
+      opacity: 0;
+    }
+
+    svg {
+      opacity: 1;
+    }
+  }
+}
