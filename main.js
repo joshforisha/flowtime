@@ -1,5 +1,11 @@
 const version = '4'
 
+let breaking = false
+let draggingItem
+let tasks = []
+let timerTimeout
+let timerInterval
+
 if (window.localStorage.getItem('version') !== version) {
   window.localStorage.clear()
   window.localStorage.setItem('version', version)
@@ -13,12 +19,6 @@ const chime = $('audio')
 const progressBar = $('progress')
 const tasksList = $('ul')
 const minute = 60_000
-
-let breaking = false
-let draggingItem
-let tasks = []
-let timerTimeout
-let timerInterval
 
 function addTask() {
   const task = createTask()
