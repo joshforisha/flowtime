@@ -261,7 +261,7 @@ progress {
 
 ul {
   list-style-type: none;
-  margin: var(--large) var(--medium) var(--huge);
+  margin: var(--large) var(--medium) 6rem;
   padding: 0;
 }
 
