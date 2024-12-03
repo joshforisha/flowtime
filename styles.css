@@ -263,6 +263,12 @@ ul {
   list-style-type: none;
   margin: var(--medium) var(--medium) 6rem;
   padding: 0;
+
+  &.-dragging {
+    button[data-action="move"] {
+      pointer-events: none;
+    }
+  }
 }
 
 @media (hover: hover) {

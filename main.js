@@ -301,6 +301,7 @@ window.addEventListener('dragend', () => {
       tasks.find((t) => t.id === item.getAttribute('data-id'))
     )
   )
+  tasksList.classList.remove('-dragging')
   draggingItem.removeAttribute('draggable')
   draggingItem = undefined
 })
@@ -319,6 +320,7 @@ window.addEventListener('dragover', (event) => {
 
 window.addEventListener('dragstart', (event) => {
   draggingItem = event.target
+  tasksList.classList.add('-dragging')
 })
 
 window.addEventListener('input', (event) => {
